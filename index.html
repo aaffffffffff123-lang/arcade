@@ -42,14 +42,20 @@
     border:3px solid var(--ink);
     background:var(--paper);
     box-shadow:4px 4px 0 var(--ink);
+    color:var(--ink);
+    text-decoration:none;
+    display:inline-block;
+    transition:transform .06s ease, box-shadow .06s ease;
   }
+  a.brand[href]:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);}
+  a.brand[href]:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
 
   .stage{
     margin:clamp(22px,6vh,48px) 0 clamp(24px,5vh,40px);
     width:min(74vw,44vh,360px);
     aspect-ratio:1/1;
     position:relative;
-    touch-action:none;
+    touch-action:pan-y;   /* 세로 스크롤은 브라우저에, 가로 제스처만 받는다 */
     cursor:grab;
   }
   .stage.dragging{cursor:grabbing;}
@@ -62,6 +68,11 @@
     background:radial-gradient(circle at 50% 38%, #F7F8F5 0%, #E2E6E1 58%, #B3BAB3 100%);
     overflow:hidden;
     box-shadow:inset 0 14px 26px rgba(27,36,48,.34), inset 0 -6px 14px rgba(27,36,48,.12);
+    animation:breathe 5.9s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{box-shadow:inset 0 14px 26px rgba(27,36,48,.34), inset 0 -6px 14px rgba(27,36,48,.12);}
+    50%    {box-shadow:inset 0 17px 30px rgba(27,36,48,.40), inset 0 -5px 12px rgba(27,36,48,.10);}
   }
   .hole canvas{display:block;width:100%;height:100%;}
 
@@ -134,13 +145,14 @@
   .game.blank::before{display:none;}
 
   @media (prefers-reduced-motion:reduce){
-    .game{transition:none;}
+    .game,.brand{transition:none;}
+    .hole{animation:none;}
   }
 </style>
 </head>
 <body>
 <div class="shell">
-  <div class="brand">오락실</div>
+  <a class="brand" id="brand">오락실</a>
 
   <div class="stage" id="stage">
     <div class="hole" id="hole"></div>
@@ -152,6 +164,19 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* ─────────────────────────────────────────────
+   사이트 첫 화면 주소를 넣으면 「오락실」 상자가 홈 링크가 됩니다.
+   비워두면 지금처럼 그냥 상자로 남습니다.
+   ───────────────────────────────────────────── */
+var HOME_URL = '';
+
+(function buildBrand(){
+  if (!HOME_URL) return;
+  var b = document.getElementById('brand');
+  b.href = HOME_URL;
+  b.target = '_top';
+})();
+
 /* ─────────────────────────────────────────────
    게임 목록 — url 만 채우면 버튼이 살아납니다.
    name 을 비우면 빈 칸으로 남습니다.
@@ -193,14 +218,24 @@ var ICONS = {
       '</g>' +
       '<circle cx="8" cy="18.4" r="3.1" fill="#1B2430"/>' +
       '<circle cx="15.4" cy="19.2" r="2.3" fill="#1B2430"/>' +
+    '</svg>',
+  whale:
+    '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
+      '<g stroke="#1B2430" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none">' +
+        '<path d="M24.6 8.4L30.4 5.4v14.2l-5.8-3z" fill="#7FC5D9"/>' +
+        '<ellipse cx="14.6" cy="12.6" rx="10.4" ry="6.2" fill="#9FD6E3"/>' +
+        '<path d="M5.4 15.4c4 2 9 2.2 13.4 .6"/>' +
+        '<path d="M11.4 6.6l-1.8-4M11.4 6.6l2.2-3.4"/>' +
+      '</g>' +
+      '<circle cx="8.6" cy="11.4" r="1.3" fill="#1B2430"/>' +
     '</svg>'
 };
 
 var GAMES = [
-  { name: '지네 못 걷기',    url: 'https://aaffffffffff123-lang.github.io/jine/', chip: '#C0563F', icon: ICONS.jine },
-  { name: '심야물류센터3층', url: '', chip: '#FFC400', icon: ICONS.cart },
-  { name: '지게차 연수원',   url: '', chip: '#F2600C', icon: ICONS.forklift },
-  { name: '',               url: '', chip: '',        icon: '' }
+  { name: '지네 못 걷기',    url: 'https://aaffffffffff123-lang.github.io/jine/',     chip: '#C0563F', icon: ICONS.jine },
+  { name: '고래 칭찬하기',   url: 'https://aaffffffffff123-lang.github.io/whale/',    chip: '#1E93B0', icon: ICONS.whale },
+  { name: '심야물류센터3층', url: 'https://aaffffffffff123-lang.github.io/floor3/',   chip: '#FFC400', icon: ICONS.cart },
+  { name: '지게차 연수원',   url: 'https://aaffffffffff123-lang.github.io/forklift/', chip: '#F2600C', icon: ICONS.forklift }
 ];
 
 (function buildGames(){
@@ -282,11 +317,14 @@ var GAMES = [
   rimL.position.set(-1.2, 1.4, -4.0);
   scene.add(rimL);
 
-  var SKIN = new THREE.MeshStandardMaterial({ color: 0xEDBC97, roughness: 0.86, metalness: 0.0 });
-  var INK  = new THREE.MeshStandardMaterial({ color: 0x1B2430, roughness: 0.45, metalness: 0.0 });
-  var BLUSH= new THREE.MeshStandardMaterial({ color: 0xE8836F, roughness: 0.9, transparent: true, opacity: 0.55 });
-  var SORE = new THREE.MeshStandardMaterial({ color: 0xD9483A, roughness: 0.85, transparent: true, opacity: 0.62 });
-  var TEAR = new THREE.MeshStandardMaterial({ color: 0x8FC4E8, roughness: 0.18, metalness: 0.0, transparent: true, opacity: 0.9 });
+  var SKIN  = new THREE.MeshStandardMaterial({ color: 0xEDBC97, roughness: 0.86, metalness: 0.0 });
+  var INK   = new THREE.MeshStandardMaterial({ color: 0x1B2430, roughness: 0.45, metalness: 0.0 });
+  var HAIR  = new THREE.MeshStandardMaterial({ color: 0x1B2430, roughness: 0.62, metalness: 0.0 });
+  var BLUSH = new THREE.MeshStandardMaterial({ color: 0xE8836F, roughness: 0.9, transparent: true, opacity: 0.55 });
+  var SORE  = new THREE.MeshStandardMaterial({ color: 0xD9483A, roughness: 0.85, transparent: true, opacity: 0.62 });
+  var MAD   = new THREE.MeshStandardMaterial({ color: 0xD9483A, roughness: 0.9, transparent: true, opacity: 0.40 });
+  var TEAR  = new THREE.MeshStandardMaterial({ color: 0x8FC4E8, roughness: 0.18, metalness: 0.0, transparent: true, opacity: 0.9 });
+  var SNOT  = new THREE.MeshStandardMaterial({ color: 0xE9F3FF, roughness: 0.08, metalness: 0.0, transparent: true, opacity: 0.42 });
 
   var head = new THREE.Group();
   head.position.y = -0.05;
@@ -303,15 +341,39 @@ var GAMES = [
   jaw.scale.set(0.98, 0.86, 0.95);
   head.add(jaw);
 
-  // 머리카락 — 직선 네 줄
-  var STRANDS = [-0.46, -0.16, 0.16, 0.46];
-  STRANDS.forEach(function (x) {
-    var strand = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.030, 0.66, 10), INK);
-    strand.position.set(x, 1.12, -0.04);
-    strand.rotation.z = -x * 0.62;
-    strand.rotation.x = -0.16;
-    head.add(strand);
+  /* 머리카락 — 정수리에서 앞으로 네 가닥, 뒤로 네 가닥.
+     두피를 따라 내려앉은 모양이라 서 있지 않습니다. */
+  function strand(offset, dir, phiEnd) {
+    var pts = [];
+    var steps = 16;
+    for (var i = 0; i <= steps; i++) {
+      var phi = 0.16 + (phiEnd - 0.16) * (i / steps);
+      var o = offset * (1 + Math.sin(phi) * 0.22);      // 내려오면서 살짝 벌어진다
+      var a = dir > 0 ? o : (Math.PI - o);
+      var r = 1.045;
+      pts.push(new THREE.Vector3(
+        Math.sin(phi) * Math.sin(a) * r,
+        Math.cos(phi) * r * 1.07,
+        Math.sin(phi) * Math.cos(a) * r * 0.97
+      ));
+    }
+    var tube = new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 26, 0.055, 8, false),
+      HAIR
+    );
+    head.add(tube);
+  }
+
+  [-0.78, -0.27, 0.27, 0.78].forEach(function (o) {
+    strand(o,  1, 1.06);   // 앞머리 — 눈썹 바로 위에서 끝난다
+    strand(o, -1, 1.74);   // 뒷머리 — 뒤통수를 덮고 목덜미까지
   });
+
+  // 가마 — 앞뒤 가닥이 모이는 자리
+  var crown = new THREE.Mesh(new THREE.SphereGeometry(0.19, 22, 16), HAIR);
+  crown.position.set(0, 1.055, -0.02);
+  crown.scale.set(1.0, 0.42, 1.0);
+  head.add(crown);
 
   // 귀
   [-1, 1].forEach(function (s) {
@@ -331,11 +393,13 @@ var GAMES = [
   var calm = new THREE.Group();
   head.add(calm);
 
+  var calmEyes = [];
   [-1, 1].forEach(function (s) {
     var eye = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 20), INK);
     eye.position.set(0.365 * s, 0.10, 0.855);
     eye.scale.set(0.95, 1.18, 0.55);
     calm.add(eye);
+    calmEyes.push(eye);
 
     var brow = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.055, 0.07), INK);
     brow.position.set(0.375 * s, 0.40, 0.86);
@@ -428,30 +492,99 @@ var GAMES = [
     }
   });
 
+  // 노려보는 얼굴 — 세 대 넘게 맞으면
+  var angry = new THREE.Group();
+  angry.visible = false;
+  head.add(angry);
+
+  [-1, 1].forEach(function (s) {
+    var eyeA = new THREE.Mesh(new THREE.SphereGeometry(0.135, 24, 20), INK);
+    eyeA.position.set(0.365 * s, 0.11, 0.855);
+    eyeA.scale.set(1.02, 1.42, 0.55);
+    angry.add(eyeA);
+
+    // 안쪽이 내려온 눈썹
+    var browA = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.062, 0.07), INK);
+    browA.position.set(0.375 * s, 0.42, 0.85);
+    browA.rotation.z = 0.40 * s;
+    browA.rotation.x = -0.18;
+    angry.add(browA);
+
+    var flush = new THREE.Mesh(new THREE.SphereGeometry(0.22, 20, 16), MAD);
+    flush.position.set(0.52 * s, -0.16, 0.74);
+    flush.scale.set(1.0, 0.80, 0.24);
+    angry.add(flush);
+  });
+
+  // 앙다문 입
+  var grim = new THREE.Mesh(new THREE.TorusGeometry(0.21, 0.045, 12, 32, Math.PI), INK);
+  grim.position.set(0, -0.34, 0.88);
+  grim.rotation.x = -0.16;
+  angry.add(grim);
+
+  // 조는 얼굴
+  var sleep = new THREE.Group();
+  sleep.visible = false;
+  head.add(sleep);
+
+  [-1, 1].forEach(function (s) {
+    var lid = new THREE.Mesh(new THREE.TorusGeometry(0.135, 0.036, 10, 26, Math.PI), INK);
+    lid.position.set(0.365 * s, 0.09, 0.855);
+    lid.rotation.z = Math.PI;
+    lid.rotation.x = -0.14;
+    sleep.add(lid);
+
+    var browS = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.05, 0.07), INK);
+    browS.position.set(0.375 * s, 0.39, 0.86);
+    browS.rotation.z = -0.05 * s;
+    browS.rotation.x = -0.18;
+    sleep.add(browS);
+  });
+
+  var doze = new THREE.Mesh(new THREE.SphereGeometry(0.10, 20, 16), INK);
+  doze.position.set(0, -0.38, 0.87);
+  doze.scale.set(1.15, 0.9, 0.35);
+  sleep.add(doze);
+
+  // 콧방울
+  var bubble = new THREE.Mesh(new THREE.SphereGeometry(0.12, 22, 18), SNOT);
+  bubble.position.set(0.17, -0.17, 0.99);
+  bubble.visible = false;
+  sleep.add(bubble);
+
   // 목
   var neck = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.52, 0.9, 28), SKIN);
   neck.position.set(0, -1.32, -0.02);
   head.add(neck);
 
-  /* 회전 */
+  /* 상태 */
   var IDLE = 0.55;          // 기본 회전 속도(rad/s)
   var TAU = 1.35;           // 감속 시정수(s)
   var DIZZY_IN = 7.0;
   var DIZZY_OUT = 3.0;
   var CRY_TIME = 2.6;       // 우는 시간(s)
+  var ANGRY_TIME = 2.4;     // 노려보는 시간(s)
   var HIT_TIME = 0.42;      // 맞고 휘청이는 시간(s)
+  var COMBO = 1.6;          // 연타로 치는 간격(s)
+  var HIDE_TOTAL = 3.4;     // 숨었다 나오는 전체 시간(s)
+  var SLEEP_AFTER = 30;     // 이만큼 안 건드리면 존다(s)
 
   var angle = 0;
   var vel = reduced ? 0 : IDLE;
+  var pitch = 0;
   var dragging = false;
   var pointerId = null;
-  var lastX = 0, lastT = 0;
+  var lastX = 0, lastY = 0, lastT = 0;
   var dragVel = 0;
-  var moved = 0, downT = 0;
+  var movedX = 0, movedY = 0, downT = 0;
   var isDizzy = false;
   var dizzyHold = 0;
-  var cryT = 0, hitT = 0;
-  var clock = 0;
+  var cryT = 0, hitT = 0, angryT = 0, hideT = 0, wakeT = 0;
+  var hits = 0, lastHit = -99;
+  var clock = 0, lastAct = 0;
+  var sleeping = false;
+  var blinkWait = 2.6, blinking = 0;
+  var gazeYaw = null, gazePitch = 0;
 
   function resize() {
     var w = hole.clientWidth || 320;
@@ -462,11 +595,32 @@ var GAMES = [
   window.addEventListener('resize', resize);
   resize();
 
+  function wake() {
+    lastAct = clock;
+    if (sleeping) { sleeping = false; wakeT = 0.5; }
+  }
+
   function punch() {
-    cryT = CRY_TIME;
+    if (hideT > 0) return;
+    wake();
+    if (clock - lastHit > COMBO) hits = 0;
+    hits++;
+    lastHit = clock;
     hitT = HIT_TIME;
     isDizzy = false;
-    vel += (vel >= 0 ? 2.2 : -2.2);   // 맞은 김에 한 바퀴 더 돈다
+
+    if (hits >= 5) {            // 더 때리면 구멍 아래로 숨는다
+      hideT = HIDE_TOTAL;
+      hits = 0;
+      cryT = 0; angryT = 0;
+    } else if (hits >= 3) {     // 연타면 노려본다
+      angryT = ANGRY_TIME;
+      cryT = 0;
+      vel += (vel >= 0 ? 1.2 : -1.2);
+    } else {                    // 한두 대는 운다
+      cryT = CRY_TIME;
+      vel += (vel >= 0 ? 2.2 : -2.2);
+    }
   }
 
   stage.addEventListener('pointerdown', function (e) {
@@ -474,10 +628,14 @@ var GAMES = [
     pointerId = e.pointerId;
     dragging = true;
     dragVel = 0;
-    moved = 0;
+    movedX = 0;
+    movedY = 0;
     downT = performance.now();
     lastX = e.clientX;
+    lastY = e.clientY;
     lastT = downT;
+    gazeYaw = null;
+    wake();
     stage.classList.add('dragging');
     stage.setPointerCapture(e.pointerId);
   });
@@ -487,24 +645,49 @@ var GAMES = [
     var now = performance.now();
     var dx = e.clientX - lastX;
     var dt = Math.max((now - lastT) / 1000, 1 / 240);
-    moved += Math.abs(dx);
+    movedX += Math.abs(dx);
+    movedY += Math.abs(e.clientY - lastY);
     angle += dx * 0.011;
     dragVel = dragVel * 0.55 + (dx * 0.011 / dt) * 0.45;
     lastX = e.clientX;
+    lastY = e.clientY;
     lastT = now;
+    lastAct = clock;
   });
 
-  function endDrag(e) {
+  function endDrag(e, cancelled) {
     if (e.pointerId !== pointerId) return;
     dragging = false;
     pointerId = null;
     stage.classList.remove('dragging');
+    if (cancelled) return;   // 세로 스크롤로 넘어간 경우 — 때린 게 아니다
     // 거의 안 움직이고 짧게 눌렀으면 때린 것으로 친다
-    if (moved < 9 && performance.now() - downT < 350) punch();
+    if (movedX < 9 && movedY < 12 && performance.now() - downT < 350) punch();
     else vel = Math.max(-40, Math.min(40, dragVel));
   }
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('pointerup', function (e) { endDrag(e, false); });
+  stage.addEventListener('pointercancel', function (e) { endDrag(e, true); });
+
+  /* 버튼을 건드리면 그쪽을 쳐다본다 */
+  function gazeAt(el) {
+    var s = stage.getBoundingClientRect();
+    var b = el.getBoundingClientRect();
+    var span = Math.max(s.width, 1);
+    var dx = (b.left + b.width / 2) - (s.left + s.width / 2);
+    var dy = (b.top + b.height / 2) - (s.top + s.height / 2);
+    gazeYaw = Math.atan2((dx / span) * 1.7, 1.05);
+    gazePitch = -Math.min(0.32, Math.max(0.08, (dy / span) * 0.30));
+    wake();
+  }
+  function gazeOff() { gazeYaw = null; }
+
+  Array.prototype.forEach.call(document.querySelectorAll('a.game'), function (el) {
+    el.addEventListener('pointerenter', function () { if (!dragging) gazeAt(el); });
+    el.addEventListener('pointerdown',  function () { gazeAt(el); });
+    el.addEventListener('focus',        function () { gazeAt(el); });
+    el.addEventListener('pointerleave', gazeOff);
+    el.addEventListener('blur',         gazeOff);
+  });
 
   var prev = performance.now();
 
@@ -513,31 +696,74 @@ var GAMES = [
     prev = now;
     clock += dt;
 
-    if (!dragging) {
-      var target = reduced ? 0 : IDLE;
+    if (cryT > 0)   cryT -= dt;
+    if (angryT > 0) angryT -= dt;
+    if (hitT > 0)   hitT -= dt;
+    if (hideT > 0)  hideT -= dt;
+    if (wakeT > 0)  wakeT -= dt;
+
+    var hiding = hideT > 0;
+    var busy = hiding || angryT > 0 || cryT > 0 || dragging || gazeYaw !== null;
+
+    if (!busy && !reduced && clock - lastAct > SLEEP_AFTER) sleeping = true;
+
+    /* 회전 */
+    if (dragging) {
+      // pointermove 에서 angle 을 직접 돌린다
+    } else if (hiding) {
+      vel *= Math.exp(-dt / 0.25);
+      var front = 2 * Math.PI * Math.round(angle / (2 * Math.PI));
+      angle += (front - angle) * Math.min(1, dt * 7);
+    } else if (gazeYaw !== null) {
+      vel *= Math.exp(-dt / 0.20);
+      var tgt = gazeYaw + 2 * Math.PI * Math.round((angle - gazeYaw) / (2 * Math.PI));
+      angle += (tgt - angle) * Math.min(1, dt * 9);
+    } else {
+      var target = reduced ? 0 : (sleeping ? 0.16 : IDLE);
       vel = target + (vel - target) * Math.exp(-dt / TAU);
       angle += vel * dt;
     }
 
-    if (cryT > 0) cryT -= dt;
-    if (hitT > 0) hitT -= dt;
-    var crying = cryT > 0;
+    var wantPitch = (gazeYaw !== null && !dragging && !hiding) ? gazePitch : 0;
+    pitch += (wantPitch - pitch) * Math.min(1, dt * 8);
 
+    /* 표정 */
     var speed = Math.abs(dragging ? dragVel : vel);
-    if (!crying) {
+    if (!hiding && cryT <= 0 && angryT <= 0 && !sleeping) {
       if (!isDizzy && speed > DIZZY_IN) { isDizzy = true; dizzyHold = 0.8; }
       if (isDizzy) {
         dizzyHold -= dt;
         if (speed < DIZZY_OUT && dizzyHold <= 0) isDizzy = false;
       }
+    } else {
+      isDizzy = false;
     }
 
-    calm.visible  = !crying && !isDizzy;
-    dizzy.visible = !crying && isDizzy;
-    cry.visible   = crying;
-    tears.visible = crying;
+    var mode;
+    if (hiding || angryT > 0) mode = 'angry';
+    else if (cryT > 0)        mode = 'cry';
+    else if (sleeping)        mode = 'sleep';
+    else if (isDizzy)         mode = 'dizzy';
+    else                      mode = 'calm';
 
-    if (crying) {
+    calm.visible  = (mode === 'calm');
+    dizzy.visible = (mode === 'dizzy');
+    cry.visible   = (mode === 'cry');
+    angry.visible = (mode === 'angry');
+    sleep.visible = (mode === 'sleep');
+    tears.visible = (mode === 'cry');
+
+    /* 눈 깜빡임 */
+    if (mode === 'calm') {
+      blinkWait -= dt;
+      if (blinkWait <= 0 && blinking <= 0) { blinking = 0.14; blinkWait = 2.4 + Math.random() * 4.2; }
+      if (blinking > 0) blinking -= dt;
+      var k = blinking > 0 ? 1 - Math.sin(Math.PI * (blinking / 0.14)) * 0.9 : 1;
+      for (var b = 0; b < calmEyes.length; b++) calmEyes[b].scale.set(0.95, 1.18 * k, 0.55);
+    }
+
+    /* 눈물 */
+    if (mode === 'cry') {
       var fade = Math.min(1, cryT / 0.6);
       for (var i = 0; i < drops.length; i++) {
         var d = drops[i];
@@ -553,26 +779,59 @@ var GAMES = [
       }
     }
 
-    head.rotation.y = angle;
-
-    if (hitT > 0) {
-      var k = hitT / HIT_TIME;
-      head.rotation.z = Math.sin(hitT * 48) * 0.30 * k;
-      head.position.x = Math.sin(hitT * 42) * 0.17 * k;
-      head.position.y = -0.05 + Math.sin(hitT * 36) * 0.07 * k;
-    } else if (crying) {
-      head.rotation.z = Math.sin(clock * 7.5) * 0.05;
-      head.position.x *= 0.85;
-      head.position.y = -0.05 - 0.05 + Math.abs(Math.sin(clock * 5.2)) * 0.05;
-    } else if (isDizzy) {
-      head.rotation.z = Math.sin(now / 90) * 0.075;
-      head.position.x *= 0.85;
-      head.position.y = -0.05 + Math.sin(now / 62) * 0.035;
+    /* 콧방울 */
+    if (mode === 'sleep') {
+      var bp = (clock % 4.2) / 4.2;
+      var g = bp < 0.86 ? bp / 0.86 : 0;
+      bubble.visible = g > 0.04;
+      bubble.scale.setScalar(0.2 + g * 1.05);
     } else {
-      head.rotation.z *= 0.86;
-      head.position.x *= 0.85;
-      head.position.y += (-0.05 - head.position.y) * 0.12;
+      bubble.visible = false;
     }
+
+    /* 자세 */
+    var y = -0.05 + (mode === 'sleep' ? 0 : Math.sin(clock * 1.05) * 0.018);
+    var rz = 0, rx = pitch, px = 0;
+
+    if (hiding) {
+      var e = HIDE_TOTAL - hideT;
+      var drop;
+      if (e < 0.40)      drop = -2.55 * (e / 0.40);                       // 쏙 내려간다
+      else if (e < 1.35) drop = -2.55;                                    // 숨어 있는다
+      else if (e < 1.75) drop = -2.55 + 1.35 * ((e - 1.35) / 0.40);       // 눈만 빼꼼
+      else if (e < 2.65) drop = -1.20 + Math.sin(clock * 3.2) * 0.03;
+      else               drop = -1.20 * (1 - Math.min(1, (e - 2.65) / 0.75));
+      y += drop;
+      rz = 0;
+      rx = 0;
+    } else if (hitT > 0) {
+      var kk = hitT / HIT_TIME;
+      rz = Math.sin(hitT * 48) * 0.30 * kk;
+      px = Math.sin(hitT * 42) * 0.17 * kk;
+      y += Math.sin(hitT * 36) * 0.07 * kk;
+    } else if (mode === 'cry') {
+      rz = Math.sin(clock * 7.5) * 0.05;
+      y += -0.05 + Math.abs(Math.sin(clock * 5.2)) * 0.05;
+    } else if (mode === 'angry') {
+      rz = Math.sin(clock * 26) * 0.014;
+      y += Math.sin(clock * 24) * 0.008;
+    } else if (mode === 'sleep') {
+      var nod = Math.sin(clock * 1.5);
+      rz = 0.13 + Math.sin(clock * 0.7) * 0.03;
+      rx += 0.11 + Math.max(0, nod) * 0.13;
+      y += -0.03 - Math.max(0, nod) * 0.06;
+    } else if (mode === 'dizzy') {
+      rz = Math.sin(now / 90) * 0.075;
+      y += Math.sin(now / 62) * 0.035;
+    }
+
+    if (wakeT > 0) y += Math.sin(wakeT * 30) * 0.11 * (wakeT / 0.5);
+
+    head.rotation.y = angle;
+    head.rotation.z += (rz - head.rotation.z) * Math.min(1, dt * 14);
+    head.rotation.x += (rx - head.rotation.x) * Math.min(1, dt * 10);
+    head.position.x += (px - head.position.x) * Math.min(1, dt * 16);
+    head.position.y += (y - head.position.y) * Math.min(1, dt * 14);
 
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
