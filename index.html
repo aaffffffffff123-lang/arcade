@@ -32,8 +32,15 @@
   }
   .shell{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;}
 
+  .top{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+
   .brand{
-    align-self:flex-start;
     font-weight:800;
     font-size:20px;
     letter-spacing:-0.04em;
@@ -49,6 +56,153 @@
   }
   a.brand[href]:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);}
   a.brand[href]:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
+
+  /* 순위 버튼 */
+  .rankbtn{
+    flex:none;
+    display:grid;
+    place-items:center;
+    width:54px;
+    height:42px;
+    padding:0;
+    border:3px solid var(--ink);
+    background:var(--paper);
+    box-shadow:4px 4px 0 var(--ink);
+    cursor:pointer;
+    transition:transform .06s ease, box-shadow .06s ease;
+  }
+  .rankbtn svg{display:block;width:24px;height:18px;}
+  .rankbtn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);}
+  .rankbtn:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
+
+  /* 순위판 */
+  .ovl{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom));
+    background:rgba(27,36,48,.42);
+  }
+  .ovl.on{display:flex;}
+  @media (min-width:600px){ .ovl{align-items:center;} }
+
+  .sheet{
+    width:100%;
+    max-width:560px;
+    max-height:86dvh;
+    display:flex;
+    flex-direction:column;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    animation:rise .16s ease-out;
+  }
+  @keyframes rise{from{transform:translateY(16px);opacity:.3;} to{transform:none;opacity:1;}}
+
+  .sheet-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 14px;
+    border-bottom:3px solid var(--ink);
+  }
+  .sheet-top h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.04em;}
+  .sheet-act{display:flex;gap:8px;align-items:center;}
+
+  .mini{
+    border:2px solid var(--ink);
+    background:var(--paper);
+    color:var(--ink);
+    font:inherit;
+    font-size:13px;
+    font-weight:800;
+    line-height:1;
+    padding:7px 9px;
+    cursor:pointer;
+  }
+  .mini:active{transform:translate(2px,2px);}
+  .mini:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+  .mini.x{width:34px;}
+
+  .tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:12px 14px;
+    border-bottom:2px solid #DCE0DB;
+  }
+  @media (min-width:600px){ .tabs{grid-template-columns:1fr 1fr 1fr;} }
+  .tab{
+    display:flex;
+    align-items:center;
+    min-width:0;
+    border:2px solid var(--ink);
+    border-left:6px solid var(--chip, var(--ink));
+    background:var(--paper);
+    color:var(--ink);
+    font:inherit;
+    font-size:13.5px;
+    font-weight:800;
+    letter-spacing:-0.04em;
+    line-height:1;
+    padding:9px 8px;
+    cursor:pointer;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .tab.on{background:var(--ink);color:#FFFFFF;}
+  .tab:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+  @media (max-width:340px){ .tab{font-size:12.5px;padding:9px 6px;} }
+
+  .rows{overflow-y:auto;padding:2px 14px 18px;-webkit-overflow-scrolling:touch;}
+  .seg{display:flex;gap:8px;padding:12px 0 2px;}
+  .seg .tab{flex:1 1 0;border-left:2px solid var(--ink);justify-content:center;}
+  .note{padding:26px 2px;color:#6B7480;font-size:15px;}
+  .note b{display:block;color:var(--ink);font-size:15px;margin-bottom:10px;}
+
+  .bd{width:100%;border-collapse:collapse;}
+  .bd th{
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    font-size:12px;
+    font-weight:700;
+    color:#6B7480;
+    text-align:left;
+    padding:10px 6px;
+    border-bottom:2px solid var(--ink);
+  }
+  .bd td{padding:9px 6px;border-bottom:1px solid #E1E5E0;font-size:15px;}
+  .bd .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .bd .r{width:36px;padding-right:0;}
+  .bd .nm span{
+    display:block;
+    max-width:10.5em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-weight:700;
+  }
+  .bd tr.mine td{background:#FFF3CE;}
+  .rk{
+    display:grid;
+    place-items:center;
+    width:26px;
+    height:24px;
+    border:2px solid var(--ink);
+    font-size:12px;
+    font-weight:800;
+    font-style:normal;
+    font-variant-numeric:tabular-nums;
+  }
+  .rk.g1{background:#FFC400;}
+  .rk.g2{background:#D7DDE2;}
+  .rk.g3{background:#E2A46A;}
 
   .stage{
     margin:clamp(22px,6vh,48px) 0 clamp(24px,5vh,40px);
@@ -131,6 +285,14 @@
     background:var(--chip);
   }
   .game .ico{width:40px;height:30px;display:block;flex:none;}
+  .game small{
+    display:block;
+    margin-top:5px;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:-0.02em;
+    color:#6B7480;
+  }
   .game:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--ink);}
   .game:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
   .game[aria-disabled="true"]{opacity:.42;pointer-events:none;}
@@ -145,14 +307,27 @@
   .game.blank::before{display:none;}
 
   @media (prefers-reduced-motion:reduce){
-    .game,.brand{transition:none;}
+    .game,.brand,.rankbtn{transition:none;}
     .hole{animation:none;}
+    .sheet{animation:none;}
   }
 </style>
 </head>
 <body>
 <div class="shell">
-  <a class="brand" id="brand">오락실</a>
+  <div class="top">
+    <a class="brand" id="brand">오락실</a>
+    <button class="rankbtn" id="rankBtn" type="button"
+            aria-label="순위" aria-haspopup="dialog" aria-expanded="false">
+      <svg viewBox="0 0 24 18" aria-hidden="true">
+        <g stroke="#1B2430" stroke-width="1.5">
+          <rect x="0.8" y="0.9"  width="22.4" height="4" fill="#FFC400"/>
+          <rect x="0.8" y="7"    width="22.4" height="4" fill="#D7DDE2"/>
+          <rect x="0.8" y="13.1" width="22.4" height="4" fill="#E2A46A"/>
+        </g>
+      </svg>
+    </button>
+  </div>
 
   <div class="stage" id="stage">
     <div class="hole" id="hole"></div>
@@ -160,6 +335,20 @@
   </div>
 
   <nav class="games" id="games"></nav>
+</div>
+
+<div class="ovl" id="ovl">
+  <section class="sheet" role="dialog" aria-modal="true" aria-label="순위">
+    <header class="sheet-top">
+      <h2>순위</h2>
+      <div class="sheet-act">
+        <button class="mini" id="rankReload" type="button">새로고침</button>
+        <button class="mini x" id="rankClose" type="button" aria-label="닫기">✕</button>
+      </div>
+    </header>
+    <div class="tabs" id="rankTabs"></div>
+    <div class="rows" id="rankRows"></div>
+  </section>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -239,16 +428,35 @@ var ICONS = {
         '<path d="M21.6 9.4c-2.3 0-3.8 1.5-3.8 3.6v3.4h7.6v-3.4c0-2.1-1.5-3.6-3.8-3.6z" fill="#4A5766"/>' +
         '<path d="M19.6 16.4l-1.2 4.8M23.6 16.4l1.2 4.8" fill="none"/>' +
       '</g>' +
+    '</svg>',
+  selflove:
+    '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
+      '<g stroke="#1B2430" stroke-width="1.8" stroke-linejoin="round">' +
+        '<circle cx="16" cy="12.4" r="7.4" fill="#EDBC97"/>' +
+        '<rect x="5.2" y="9.4" width="4.8" height="6.6" rx="2.4" fill="#EDBC97"/>' +
+        '<rect x="22" y="9.4" width="4.8" height="6.6" rx="2.4" fill="#EDBC97"/>' +
+      '</g>' +
+      '<g fill="#E8836F" opacity=".6">' +
+        '<ellipse cx="12.7" cy="14.4" rx="1.5" ry="1"/>' +
+        '<ellipse cx="19.3" cy="14.4" rx="1.5" ry="1"/>' +
+      '</g>' +
+      '<g stroke="#1B2430" stroke-width="1.6" stroke-linecap="round" fill="none">' +
+        '<path d="M12.4 11.6c.6-.8 1.7-.8 2.3 0"/>' +
+        '<path d="M17.3 11.6c.6-.8 1.7-.8 2.3 0"/>' +
+        '<path d="M14.7 15.5c.8.8 1.8.8 2.6 0"/>' +
+      '</g>' +
+      '<path d="M27.1 2.6c.8-.9 2.3-.4 2.3.9 0 1.2-1.5 2.3-2.3 2.9-.8-.6-2.3-1.7-2.3-2.9 0-1.3 1.5-1.8 2.3-.9z"' +
+        ' fill="#E8306B" stroke="#1B2430" stroke-width="1.2" stroke-linejoin="round"/>' +
     '</svg>'
 };
 
 var GAMES = [
-  { name: '지네 못 걷기',       url: 'https://aaffffffffff123-lang.github.io/jine/',     chip: '#C0563F', icon: ICONS.jine },
-  { name: '고래 칭찬하기',      url: 'https://aaffffffffff123-lang.github.io/whale/',    chip: '#1E93B0', icon: ICONS.whale },
-  { name: '나에게서 도망치기',  url: 'https://aaffffffffff123-lang.github.io/split/',    chip: '#4A5766', icon: ICONS.split },
-  { name: '' },
-  { name: '심야물류센터3층',    url: 'https://aaffffffffff123-lang.github.io/floor3/',   chip: '#FFC400', icon: ICONS.cart },
-  { name: '지게차 연수원',      url: 'https://aaffffffffff123-lang.github.io/forklift/', chip: '#F2600C', icon: ICONS.forklift }
+  { name: '지네 못 걷기',       url: 'https://aaffffffffff123-lang.github.io/jine/',     chip: '#C0563F', icon: ICONS.jine,     desc: '' },
+  { name: '고래 칭찬하기',      url: 'https://aaffffffffff123-lang.github.io/whale/',    chip: '#1E93B0', icon: ICONS.whale,    desc: '' },
+  { name: '나에게서 도망치기',  url: 'https://aaffffffffff123-lang.github.io/split/',    chip: '#4A5766', icon: ICONS.split,    desc: '' },
+  { name: '스스로를 사랑하기',  url: 'https://aaffffffffff123-lang.github.io/selflove/', chip: '#E8306B', icon: ICONS.selflove, desc: '' },
+  { name: '심야물류센터3층',    url: 'https://aaffffffffff123-lang.github.io/floor3/',   chip: '#FFC400', icon: ICONS.cart,     desc: '' },
+  { name: '지게차 연수원',      url: 'https://aaffffffffff123-lang.github.io/forklift/', chip: '#F2600C', icon: ICONS.forklift, desc: '' }
 ];
 
 (function buildGames(){
@@ -269,6 +477,11 @@ var GAMES = [
     a.innerHTML = g.icon;
     var label = document.createElement('span');
     label.textContent = g.name;
+    if (g.desc) {
+      var sub = document.createElement('small');
+      sub.textContent = g.desc;
+      label.appendChild(sub);
+    }
     a.appendChild(label);
 
     if (g.url) {
@@ -280,6 +493,335 @@ var GAMES = [
     }
     wrap.appendChild(a);
   }
+})();
+
+/* ─────────────────────────────────────────────
+   순위판 — 게임들이 쓰는 오락실 공용 서버(GAS)에서 그대로 읽어옵니다.
+   서버 주소를 바꾸면 이 한 줄만 고치면 됩니다.
+   ───────────────────────────────────────────── */
+var RANK_URL = 'https://script.google.com/macros/s/AKfycbzKmIYdOCYXNwXbNzvZWR2mQZk59Hhbpk7le-86VGqwzrgJZYqwGegYmRHcKhQ59fVV/exec';
+var RANK_TTL = 45000;   // 이 시간 안에 다시 열면 서버를 또 부르지 않습니다
+var RANK_MAX = 100;     // 한 판에 보여줄 줄 수
+
+(function rankPanel(){
+  var ovl    = document.getElementById('ovl');
+  var tabsEl = document.getElementById('rankTabs');
+  var rowsEl = document.getElementById('rankRows');
+  var btn    = document.getElementById('rankBtn');
+  var closeB = document.getElementById('rankClose');
+  var reloadB= document.getElementById('rankReload');
+
+  /* me: 게임이 브라우저에 저장해 둔 내 이름. 같은 주소라서 그대로 읽힙니다.
+     이름이 겹치면 남의 줄도 같이 표시될 수 있습니다. */
+  var BOARDS = [
+    { key:'jine',     name:'지네 못 걷기',      chip:'#C0563F', me:'jine_name' },
+    { key:'whale',    name:'고래 칭찬하기',     chip:'#1E93B0', me:'whale_name' },
+    { key:'najasin',  name:'나에게서 도망치기', chip:'#4A5766', me:'najasin_name' },
+    { key:'selflove', name:'스스로를 사랑하기', chip:'#E8306B', me:'selflove_name' },
+    { key:'floor3',   name:'심야물류센터3층',   chip:'#FFC400', me:'' },
+    { key:'forklift', name:'지게차 연수원',     chip:'#F2600C', me:'' }
+  ];
+
+  var cache = {};              // 데이터키 → { at, data }
+  var cur = BOARDS[0].key;
+  var whaleMode = 'phone';
+  var allState = 0;            // 0 안 해봄 · 1 됨 · 2 서버가 아직 모름
+  var seq = 0;                 // 늦게 도착한 응답이 화면을 덮어쓰지 않게
+
+  /* ── 통신 */
+  function jsonp(qs, cb){
+    var name = 'arc_' + Math.random().toString(36).slice(2);
+    var sc = document.createElement('script');
+    var done = false;
+    var timer = setTimeout(function(){ finish(null); }, 12000);
+
+    function finish(d){
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try { delete window[name]; } catch (e) { window[name] = undefined; }
+      if (sc.parentNode) sc.parentNode.removeChild(sc);
+      cb(d);
+    }
+    window[name] = function(d){ finish(d); };
+    sc.onerror = function(){ finish(null); };
+    sc.src = RANK_URL + (RANK_URL.indexOf('?') >= 0 ? '&' : '?') +
+             qs + '&callback=' + name + '&t=' + Date.now();
+    document.head.appendChild(sc);
+  }
+
+  function put(k, d){ if (d) cache[k] = { at: Date.now(), data: d }; }
+  function fresh(k){
+    var c = cache[k];
+    return (c && Date.now() - c.at < RANK_TTL) ? c.data : null;
+  }
+
+  /* 한 번에 전부 받아오기. 서버가 game=all 을 모르면 지네 순위(배열)가 오므로
+     그걸로 구분해서 게임별 호출로 돌아갑니다. */
+  function loadAll(cb){
+    jsonp('game=all', function(d){
+      if (d && !(d instanceof Array) && d.jine){
+        put('jine', d.jine);
+        put('najasin', d.najasin);
+        put('selflove', d.selflove);
+        put('whale_phone', d.whale_phone);
+        put('whale_key', d.whale_key);
+        put('forklift', d.forklift);
+        put('floor3', d.floor3);
+        allState = 1;
+      } else {
+        allState = 2;
+      }
+      cb();
+    });
+  }
+
+  function dataKey(key){
+    return key === 'whale' ? 'whale_' + whaleMode : key;
+  }
+
+  function need(key, cb){
+    var dk = dataKey(key);
+    var hit = fresh(dk);
+    if (hit) { cb(hit); return; }
+
+    if (allState === 0) {
+      loadAll(function(){
+        var got = fresh(dk);
+        if (got) cb(got); else one(dk, cb);
+      });
+      return;
+    }
+    one(dk, cb);
+  }
+
+  function one(dk, cb){
+    var qs = dk === 'whale_phone' ? 'game=whale&mode=phone'
+           : dk === 'whale_key'   ? 'game=whale&mode=key'
+           : 'game=' + dk;
+    jsonp(qs, function(d){ put(dk, d); cb(d); });
+  }
+
+  /* ── 표 그리기 */
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+    });
+  }
+  function comma(n){
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function fmtSec(v){
+    var m = Math.floor(v / 60), r = v - m * 60;
+    return m ? m + '분 ' + r.toFixed(1) + '초' : r.toFixed(1) + '초';
+  }
+  function fmtTime(t){
+    var m = Math.floor(t / 60), s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' + s : s);
+  }
+  function note(msg){ return '<p class="note">' + esc(msg) + '</p>'; }
+  function fail(){
+    return '<div class="note"><b>지금은 순위를 불러오지 못했습니다</b>' +
+           '<button class="mini" id="rankRetry" type="button">다시 시도</button></div>';
+  }
+  function rk(n){
+    var g = n <= 3 ? ' g' + n : '';
+    return '<i class="rk' + g + '">' + n + '</i>';
+  }
+  function myName(key){
+    var b = boardOf(key);
+    if (!b || !b.me) return '';
+    try { return (localStorage.getItem(b.me) || '').trim(); } catch (e) { return ''; }
+  }
+  function table(head, body){
+    return '<table class="bd"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table>';
+  }
+
+  /* 지네 · 나자신 · 사랑 — 값이 클수록 위. 동점은 공동 순위. */
+  function drawScore(list, unit, col, mine){
+    if (!list || !list.length) return note('아직 기록이 없습니다');
+    var body = '', r = 0, prev = null, n = Math.min(list.length, RANK_MAX);
+    for (var i = 0; i < n; i++){
+      var v = Number(list[i].d) || 0;
+      if (v !== prev){ r = i + 1; prev = v; }
+      var nm = String(list[i].n || '');
+      body += '<tr' + (mine && nm === mine ? ' class="mine"' : '') + '>' +
+                '<td class="r">' + rk(r) + '</td>' +
+                '<td class="nm"><span>' + esc(nm) + '</span></td>' +
+                '<td class="num">' + comma(v) + unit + '</td>' +
+              '</tr>';
+    }
+    return table('<th class="r"></th><th>이름</th><th class="num">' + col + '</th>', body);
+  }
+
+  /* 고래 — 죽이는 데 걸린 시간이 짧을수록 위 */
+  function drawWhale(list, mine){
+    var seg = '<div class="seg">' +
+      '<button class="tab' + (whaleMode === 'phone' ? ' on' : '') + '" data-wm="phone" type="button">폰</button>' +
+      '<button class="tab' + (whaleMode === 'key'   ? ' on' : '') + '" data-wm="key" type="button">키보드</button>' +
+      '</div>';
+    if (!list || !list.length) return seg + note('아직 기록이 없습니다');
+
+    var body = '', r = 0, prev = null, n = Math.min(list.length, RANK_MAX);
+    for (var i = 0; i < n; i++){
+      var t = Number(list[i].time) || 0;
+      if (t !== prev){ r = i + 1; prev = t; }
+      var nm = String(list[i].name || '');
+      body += '<tr' + (mine && nm === mine ? ' class="mine"' : '') + '>' +
+                '<td class="r">' + rk(r) + '</td>' +
+                '<td class="nm"><span>' + esc(nm) + '</span></td>' +
+                '<td class="num">' + fmtSec(t) + '</td>' +
+                '<td class="num">' + comma(Number(list[i].score) || 0) + '문장</td>' +
+              '</tr>';
+    }
+    return seg + table('<th class="r"></th><th>이름</th><th class="num">소요</th><th class="num">문장</th>', body);
+  }
+
+  /* 지게차 — 수료 점수와 속도전을 이름으로 합칩니다 (게임 안의 기록판과 같은 규칙) */
+  function drawForklift(d){
+    var certs = (d && d.certs) || [], rush = (d && d.rush) || [];
+    if (!certs.length && !rush.length) return note('아직 기록이 없습니다');
+
+    var by = {}, list = [], i, k, r;
+    function get(n){
+      if (!by[n]) { by[n] = { name:n, score:null, rush:null }; list.push(by[n]); }
+      return by[n];
+    }
+    for (i = 0; i < certs.length; i++){
+      r = get(String(certs[i].name));
+      if (r.score === null || certs[i].score > r.score) r.score = Number(certs[i].score) || 0;
+    }
+    for (i = 0; i < rush.length; i++){
+      r = get(String(rush[i].name));
+      if (r.rush === null || rush[i].total < r.rush) r.rush = Number(rush[i].total) || 0;
+    }
+    list.sort(function(a, b){
+      if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0);
+      return (a.rush === null ? 1e9 : a.rush) - (b.rush === null ? 1e9 : b.rush);
+    });
+
+    var body = '', n = Math.min(list.length, RANK_MAX);
+    for (i = 0; i < n; i++){
+      body += '<tr>' +
+                '<td class="r">' + rk(i + 1) + '</td>' +
+                '<td class="nm"><span>' + esc(list[i].name) + '</span></td>' +
+                '<td class="num">' + (list[i].score === null ? '-' : list[i].score + '점') + '</td>' +
+                '<td class="num">' + (list[i].rush === null ? '-' : fmtTime(list[i].rush)) + '</td>' +
+              '</tr>';
+    }
+    return table('<th class="r"></th><th>이름</th><th class="num">수료 점수</th><th class="num">속도전</th>', body);
+  }
+
+  /* 3층 — 순위가 아니라 명단 */
+  function drawFloor3(d){
+    var rows = (d && d.rows) || [];
+    if (!rows.length) return note('아직 기록이 없습니다');
+    var body = '', n = Math.min(rows.length, RANK_MAX);
+    for (var i = 0; i < n; i++){
+      body += '<tr>' +
+                '<td class="num" style="text-align:left">' + (Number(rows[i].day) || 0) + '일차</td>' +
+                '<td class="nm"><span>' + esc(rows[i].who) + '</span></td>' +
+                '<td>' + esc(rows[i].reason) + '</td>' +
+                '<td class="num">' + esc(rows[i].date) + '</td>' +
+              '</tr>';
+    }
+    return table('<th>일차</th><th>이름</th><th>사유</th><th class="num">날짜</th>', body);
+  }
+
+  function draw(key, d){
+    if (d === null || d === undefined) return fail();
+    if (key === 'jine')     return drawScore(d, 'm', '거리', myName(key));
+    if (key === 'najasin')  return drawScore(d, '명', '도망친 인원', myName(key));
+    if (key === 'selflove') return drawScore(d, '회', '사랑해준 횟수', myName(key));
+    if (key === 'whale')    return drawWhale(d, myName(key));
+    if (key === 'forklift') return drawForklift(d);
+    if (key === 'floor3')   return drawFloor3(d);
+    return fail();
+  }
+
+  /* ── 화면 */
+  function boardOf(key){
+    for (var i = 0; i < BOARDS.length; i++) if (BOARDS[i].key === key) return BOARDS[i];
+    return null;
+  }
+
+  function buildTabs(){
+    tabsEl.innerHTML = '';
+    BOARDS.forEach(function(b){
+      var t = document.createElement('button');
+      t.type = 'button';
+      t.className = 'tab' + (b.key === cur ? ' on' : '');
+      t.setAttribute('role', 'tab');
+      t.setAttribute('aria-selected', b.key === cur ? 'true' : 'false');
+      t.style.setProperty('--chip', b.chip);
+      t.innerHTML = esc(b.name);
+      t.addEventListener('click', function(){ show(b.key); });
+      tabsEl.appendChild(t);
+    });
+  }
+
+  function markTabs(){
+    var list = tabsEl.children;
+    for (var i = 0; i < list.length; i++){
+      var on = BOARDS[i].key === cur;
+      list[i].className = 'tab' + (on ? ' on' : '');
+      list[i].setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+  }
+
+  function show(key){
+    cur = key;
+    markTabs();
+    var my = ++seq;
+    var cached = fresh(dataKey(key));
+    if (!cached) rowsEl.innerHTML = note('불러오는 중');
+    rowsEl.scrollTop = 0;
+    need(key, function(d){
+      if (my !== seq) return;
+      rowsEl.innerHTML = draw(key, d);
+    });
+  }
+
+  rowsEl.addEventListener('click', function(e){
+    var wm = e.target.closest ? e.target.closest('[data-wm]') : null;
+    if (wm){ whaleMode = wm.getAttribute('data-wm'); show('whale'); return; }
+    if (e.target.id === 'rankRetry'){ cache = {}; show(cur); }
+  });
+
+  reloadB.addEventListener('click', function(){
+    cache = {};
+    allState = 0;
+    show(cur);
+  });
+
+  /* ── 열고 닫기 */
+  var scrollY = 0;
+  function open(){
+    scrollY = window.scrollY || 0;
+    ovl.classList.add('on');
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    window.__rankOpen = true;          // 얼굴 렌더링을 잠시 멈춥니다
+    show(cur);
+    closeB.focus();
+  }
+  function close(){
+    ovl.classList.remove('on');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    window.__rankOpen = false;
+    btn.focus();
+    window.scrollTo(0, scrollY);
+  }
+
+  btn.addEventListener('click', open);
+  closeB.addEventListener('click', close);
+  ovl.addEventListener('click', function(e){ if (e.target === ovl) close(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && ovl.classList.contains('on')) close();
+  });
+
+  buildTabs();
 })();
 
 /* ─────────────────────────────────────────────
@@ -694,7 +1236,7 @@ var GAMES = [
   }
   function gazeOff() { gazeYaw = null; }
 
-  Array.prototype.forEach.call(document.querySelectorAll('a.game'), function (el) {
+  Array.prototype.forEach.call(document.querySelectorAll('a.game, #rankBtn'), function (el) {
     el.addEventListener('pointerenter', function () { if (!dragging) gazeAt(el); });
     el.addEventListener('pointerdown',  function () { gazeAt(el); });
     el.addEventListener('focus',        function () { gazeAt(el); });
@@ -705,6 +1247,9 @@ var GAMES = [
   var prev = performance.now();
 
   function frame(now) {
+    // 순위판이 덮고 있는 동안에는 그리지 않습니다
+    if (window.__rankOpen) { prev = now; requestAnimationFrame(frame); return; }
+
     var dt = Math.min((now - prev) / 1000, 0.05);
     prev = now;
     clock += dt;
