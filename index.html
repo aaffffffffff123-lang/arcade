@@ -560,7 +560,7 @@ var RANK_MAX = 100;     // 한 판에 보여줄 줄 수
      그걸로 구분해서 게임별 호출로 돌아갑니다. */
   function loadAll(cb){
     jsonp('game=all', function(d){
-      if (d && !(d instanceof Array) && d.jine){
+      if (d && !Array.isArray(d) && d.jine){
         put('jine', d.jine);
         put('najasin', d.najasin);
         put('selflove', d.selflove);
@@ -570,6 +570,7 @@ var RANK_MAX = 100;     // 한 판에 보여줄 줄 수
         put('floor3', d.floor3);
         allState = 1;
       } else {
+        if (Array.isArray(d)) put('jine', d);   // 구버전 서버가 돌려준 지네 순위
         allState = 2;
       }
       cb();
