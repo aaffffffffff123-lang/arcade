@@ -371,6 +371,21 @@ var HOME_URL = '';
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+  pigeon:
+    '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
+      '<g stroke="#1B2430" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M5 14.6L1.2 11.4l4.2.2" fill="#6E7884"/>' +
+        '<ellipse cx="13.2" cy="13.4" rx="9.2" ry="5.6" fill="#8E97A3"/>' +
+        '<path d="M10.6 12.4c1.8 1.5 4.8 1.6 7.6.2" fill="none"/>' +
+        '<path d="M19.6 10.4c.4-2.2 1.6-3.4 3.2-3.6" fill="none" stroke="#2A8F63" stroke-width="2.2"/>' +
+        '<circle cx="22.6" cy="7.6" r="3.5" fill="#8E97A3"/>' +
+      '</g>' +
+      '<path d="M25.8 7.9l3.4.9-3.3 1.1z" fill="#1B2430"/>' +
+      '<circle cx="23.8" cy="7" r="1.1" fill="#F2600C"/>' +
+      '<g stroke="#C0524A" stroke-width="1.9" stroke-linecap="round" fill="none">' +
+        '<path d="M11.4 19v3M9.8 22h3.2M16.6 19v3M15 22h3.2"/>' +
+      '</g>' +
+    '</svg>',
   jine:
     '<svg class="ico" viewBox="0 0 26 20" aria-hidden="true">' +
       '<g stroke="#5e2618" stroke-width="1.5" stroke-linecap="round" fill="none">' +
@@ -450,13 +465,15 @@ var ICONS = {
     '</svg>'
 };
 
+/* 최근에 만든 것부터 */
 var GAMES = [
-  { name: '지네 못 걷기',       url: 'https://aaffffffffff123-lang.github.io/jine/',     chip: '#C0563F', icon: ICONS.jine,     desc: '' },
-  { name: '고래 칭찬하기',      url: 'https://aaffffffffff123-lang.github.io/whale/',    chip: '#1E93B0', icon: ICONS.whale,    desc: '' },
-  { name: '나에게서 도망치기',  url: 'https://aaffffffffff123-lang.github.io/split/',    chip: '#4A5766', icon: ICONS.split,    desc: '' },
+  { name: '비둘기 게임',        url: 'https://aaffffffffff123-lang.github.io/pigeon/',   chip: '#2E5B45', icon: ICONS.pigeon,   desc: '' },
   { name: '스스로를 사랑하기',  url: 'https://aaffffffffff123-lang.github.io/selflove/', chip: '#E8306B', icon: ICONS.selflove, desc: '' },
-  { name: '심야물류센터3층',    url: 'https://aaffffffffff123-lang.github.io/floor3/',   chip: '#FFC400', icon: ICONS.cart,     desc: '' },
-  { name: '지게차 연수원',      url: 'https://aaffffffffff123-lang.github.io/forklift/', chip: '#F2600C', icon: ICONS.forklift, desc: '' }
+  { name: '나에게서 도망치기',  url: 'https://aaffffffffff123-lang.github.io/split/',    chip: '#4A5766', icon: ICONS.split,    desc: '' },
+  { name: '고래 칭찬하기',      url: 'https://aaffffffffff123-lang.github.io/whale/',    chip: '#1E93B0', icon: ICONS.whale,    desc: '' },
+  { name: '지네 못 걷기',       url: 'https://aaffffffffff123-lang.github.io/jine/',     chip: '#C0563F', icon: ICONS.jine,     desc: '' },
+  { name: '지게차 연수원',      url: 'https://aaffffffffff123-lang.github.io/forklift/', chip: '#F2600C', icon: ICONS.forklift, desc: '' },
+  { name: '심야물류센터3층',    url: 'https://aaffffffffff123-lang.github.io/floor3/',   chip: '#FFC400', icon: ICONS.cart,     desc: '' }
 ];
 
 (function buildGames(){
@@ -498,6 +515,7 @@ var GAMES = [
 /* ─────────────────────────────────────────────
    순위판 — 게임들이 쓰는 오락실 공용 서버(GAS)에서 그대로 읽어옵니다.
    서버 주소를 바꾸면 이 한 줄만 고치면 됩니다.
+   비둘기 게임은 순위가 없어 탭이 없습니다.
    ───────────────────────────────────────────── */
 var RANK_URL = 'https://script.google.com/macros/s/AKfycbzKmIYdOCYXNwXbNzvZWR2mQZk59Hhbpk7le-86VGqwzrgJZYqwGegYmRHcKhQ59fVV/exec';
 var RANK_TTL = 45000;   // 이 시간 안에 다시 열면 서버를 또 부르지 않습니다
@@ -514,12 +532,12 @@ var RANK_MAX = 100;     // 한 판에 보여줄 줄 수
   /* me: 게임이 브라우저에 저장해 둔 내 이름. 같은 주소라서 그대로 읽힙니다.
      이름이 겹치면 남의 줄도 같이 표시될 수 있습니다. */
   var BOARDS = [
-    { key:'jine',     name:'지네 못 걷기',      chip:'#C0563F', me:'jine_name' },
-    { key:'whale',    name:'고래 칭찬하기',     chip:'#1E93B0', me:'whale_name' },
-    { key:'najasin',  name:'나에게서 도망치기', chip:'#4A5766', me:'najasin_name' },
     { key:'selflove', name:'스스로를 사랑하기', chip:'#E8306B', me:'selflove_name' },
-    { key:'floor3',   name:'심야물류센터3층',   chip:'#FFC400', me:'' },
-    { key:'forklift', name:'지게차 연수원',     chip:'#F2600C', me:'' }
+    { key:'najasin',  name:'나에게서 도망치기', chip:'#4A5766', me:'najasin_name' },
+    { key:'whale',    name:'고래 칭찬하기',     chip:'#1E93B0', me:'whale_name' },
+    { key:'jine',     name:'지네 못 걷기',      chip:'#C0563F', me:'jine_name' },
+    { key:'forklift', name:'지게차 연수원',     chip:'#F2600C', me:'' },
+    { key:'floor3',   name:'심야물류센터3층',   chip:'#FFC400', me:'' }
   ];
 
   var cache = {};              // 데이터키 → { at, data }
