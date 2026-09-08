@@ -1236,7 +1236,7 @@ function drawJockey(list, mine){
 
   var angle = 0;
   var vel = reduced ? 0 : IDLE;
-  var pitch = 0;
+  
   var dragging = false;
   var pointerId = null;
   var lastX = 0, lastY = 0, lastT = 0;
@@ -1249,7 +1249,7 @@ function drawJockey(list, mine){
   var clock = 0, lastAct = 0;
   var sleeping = false;
   var blinkWait = 2.6, blinking = 0;
-  var gazeYaw = null, gazePitch = 0;
+  
 
   function resize() {
     var w = hole.clientWidth || 320;
@@ -1299,7 +1299,7 @@ function drawJockey(list, mine){
     lastX = e.clientX;
     lastY = e.clientY;
     lastT = downT;
-    gazeYaw = null;
+   
     wake();
     stage.classList.add('dragging');
     stage.setPointerCapture(e.pointerId);
@@ -1333,26 +1333,7 @@ function drawJockey(list, mine){
   stage.addEventListener('pointerup', function (e) { endDrag(e, false); });
   stage.addEventListener('pointercancel', function (e) { endDrag(e, true); });
 
-  /* 버튼을 건드리면 그쪽을 쳐다본다 */
-  function gazeAt(el) {
-    var s = stage.getBoundingClientRect();
-    var b = el.getBoundingClientRect();
-    var span = Math.max(s.width, 1);
-    var dx = (b.left + b.width / 2) - (s.left + s.width / 2);
-    var dy = (b.top + b.height / 2) - (s.top + s.height / 2);
-    gazeYaw = Math.atan2((dx / span) * 1.7, 1.05);
-    gazePitch = -Math.min(0.32, Math.max(0.08, (dy / span) * 0.30));
-    wake();
-  }
-  function gazeOff() { gazeYaw = null; }
-
-  Array.prototype.forEach.call(document.querySelectorAll('a.game, #rankBtn'), function (el) {
-    el.addEventListener('pointerenter', function () { if (!dragging) gazeAt(el); });
-    el.addEventListener('pointerdown',  function () { gazeAt(el); });
-    el.addEventListener('focus',        function () { gazeAt(el); });
-    el.addEventListener('pointerleave', gazeOff);
-    el.addEventListener('blur',         gazeOff);
-  });
+ 
 
   var prev = performance.now();
 
@@ -1371,7 +1352,7 @@ function drawJockey(list, mine){
     if (wakeT > 0)  wakeT -= dt;
 
     var hiding = hideT > 0;
-    var busy = hiding || angryT > 0 || cryT > 0 || dragging || gazeYaw !== null;
+   var busy = hiding || angryT > 0 || cryT > 0 || dragging;
 
     if (!busy && !reduced && clock - lastAct > SLEEP_AFTER) sleeping = true;
 
@@ -1382,18 +1363,13 @@ function drawJockey(list, mine){
       vel *= Math.exp(-dt / 0.25);
       var front = 2 * Math.PI * Math.round(angle / (2 * Math.PI));
       angle += (front - angle) * Math.min(1, dt * 7);
-    } else if (gazeYaw !== null) {
-      vel *= Math.exp(-dt / 0.20);
-      var tgt = gazeYaw + 2 * Math.PI * Math.round((angle - gazeYaw) / (2 * Math.PI));
-      angle += (tgt - angle) * Math.min(1, dt * 9);
     } else {
       var target = reduced ? 0 : (sleeping ? 0.16 : IDLE);
       vel = target + (vel - target) * Math.exp(-dt / TAU);
       angle += vel * dt;
     }
 
-    var wantPitch = (gazeYaw !== null && !dragging && !hiding) ? gazePitch : 0;
-    pitch += (wantPitch - pitch) * Math.min(1, dt * 8);
+  
 
     /* 표정 */
     var speed = Math.abs(dragging ? dragVel : vel);
