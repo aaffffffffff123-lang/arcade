@@ -371,29 +371,48 @@ var HOME_URL = '';
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+
+
+
+
+
 jockey:
-  '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
-    '<g stroke="#1B2430" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none">' +
+  '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
 
-      // 포크
-      '<path d="M4 18h14M4 21h14" stroke="#F26B1D" stroke-width="3"/>' +
+    // 긴 포크
+    '<path d="M3 22.5H25.5" ' +
+          'stroke="#F26B1D" stroke-width="3.5" ' +
+          'stroke-linecap="round"/>' +
 
-      // 본체
-      '<path d="M18 15l4-5 4 5z" fill="#F26B1D"/>' +
+    // 포크 윗면
+    '<path d="M5 19.5H24" ' +
+          'stroke="#F26B1D" stroke-width="2.2" ' +
+          'stroke-linecap="round"/>' +
 
-      // 손잡이 기둥
-      '<path d="M22 10l2-6" stroke="#B84A10" stroke-width="2.2"/>' +
+    // 유압 본체
+    '<path d="M23 20.5L26.2 12.5L31 14.5L29.5 21.5Z" ' +
+          'fill="#F26B1D" stroke="#1B2430" stroke-width="1.5" ' +
+          'stroke-linejoin="round"/>' +
 
-      // 역삼각형 손잡이
-      '<path d="M20.5 3.5h7M20.5 3.5l3.5 3.5 3.5-3.5" stroke="#B84A10" stroke-width="2"/>' +
+    // 큰 조향 바퀴
+    '<circle cx="29.5" cy="23" r="3.2" ' +
+            'fill="#1B2430"/>' +
 
-    '</g>' +
+    // 앞쪽 작은 포크 바퀴
+    '<circle cx="7" cy="23.7" r="1.6" ' +
+            'fill="#1B2430"/>' +
 
-    // 바퀴
-    '<circle cx="19" cy="19.5" r="2.2" fill="#1B2430"/>' +
-    '<circle cx="7" cy="21" r="1.5" fill="#1B2430"/>' +
+    // 핸들 기둥
+    '<path d="M27.5 13L31.5 5.5" ' +
+          'stroke="#B84A10" stroke-width="2.5" ' +
+          'stroke-linecap="round"/>' +
+
+    // 실제 자키처럼 넓은 손잡이
+    '<path d="M29.5 6L30.8 2.8H37L38.2 6L34 8.5Z" ' +
+          'fill="none" stroke="#B84A10" stroke-width="2.2" ' +
+          'stroke-linejoin="round"/>' +
+
   '</svg>',
-
 
 
 
