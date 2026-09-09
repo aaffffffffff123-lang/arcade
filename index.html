@@ -489,6 +489,27 @@ jockey:
         '<path d="M19.6 16.4l-1.2 4.8M23.6 16.4l1.2 4.8" fill="none"/>' +
       '</g>' +
     '</svg>',
+
+  roach:
+    '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
+      '<g stroke="#1B2430" stroke-width="1.6" stroke-linecap="round" fill="none">' +
+        '<path d="M26.6 9.8C27.9 6.6 29.2 4.2 30.8 2.4"/>' +
+        '<path d="M26.6 14.2C27.9 17.4 29.2 19.8 30.8 21.6"/>' +
+      '</g>' +
+      '<g stroke="#1B2430" stroke-width="1.8" stroke-linecap="round" fill="none">' +
+        '<path d="M17.4 9.2L15.4 2.6M11.8 8.2L8.2 2.2M6.4 9.4L1.8 4.8"/>' +
+        '<path d="M17.4 14.8L15.4 21.4M11.8 15.8L8.2 21.8M6.4 14.6L1.8 19.2"/>' +
+      '</g>' +
+      '<ellipse cx="11.6" cy="12" rx="8.3" ry="4.8" fill="#8A5A2C" stroke="#1B2430" stroke-width="1.8"/>' +
+      '<ellipse cx="19.2" cy="12" rx="4.5" ry="3.9" fill="#6A4526" stroke="#1B2430" stroke-width="1.8"/>' +
+      '<ellipse cx="24.4" cy="12" rx="2.6" ry="2.4" fill="#7A4E28" stroke="#1B2430" stroke-width="1.7"/>' +
+      '<path d="M16.4 12H5" stroke="#5A3418" stroke-width="1.3" stroke-linecap="round"/>' +
+    '</svg>',
+
+
+
+
+
   selflove:
     '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
       '<g stroke="#1B2430" stroke-width="1.8" stroke-linejoin="round">' +
@@ -511,6 +532,7 @@ jockey:
 };
 
 var GAMES = [
+  { name: '바퀴벌레',            url: 'https://aaffffffffff123-lang.github.io/roach/',        chip: '#8A4B1E', icon: ICONS.roach,    desc: '' },
   { name: '자키 라이더',          url: 'https://aaffffffffff123-lang.github.io/jockey-rider/', chip: '#F26B1D', icon: ICONS.jockey,   desc: '' },
   { name: '비둘기 게임',          url: 'https://aaffffffffff123-lang.github.io/pigeon/',       chip: '#2E5B45', icon: ICONS.pigeon,   desc: '' },
   { name: '스스로를 사랑하기',    url: 'https://aaffffffffff123-lang.github.io/selflove/',     chip: '#E8306B', icon: ICONS.selflove, desc: '' },
@@ -518,7 +540,8 @@ var GAMES = [
   { name: '고래 칭찬하기',        url: 'https://aaffffffffff123-lang.github.io/whale/',        chip: '#1E93B0', icon: ICONS.whale,    desc: '' },
   { name: '지네 못 걷기',         url: 'https://aaffffffffff123-lang.github.io/jine/',         chip: '#C0563F', icon: ICONS.jine,     desc: '' },
   { name: '지게차 연수원',        url: 'https://aaffffffffff123-lang.github.io/forklift/',     chip: '#F2600C', icon: ICONS.forklift, desc: '' },
-  { name: '심야물류센터3층',      url: 'https://aaffffffffff123-lang.github.io/floor3/',       chip: '#FFC400', icon: ICONS.cart,     desc: '' }
+  { name: '심야물류센터3층',      url: 'https://aaffffffffff123-lang.github.io/floor3/',       chip: '#FFC400', icon: ICONS.cart,     desc: '' },
+  { name: '' }
 ];
 
 (function buildGames(){
