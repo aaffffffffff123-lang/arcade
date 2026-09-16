@@ -306,7 +306,25 @@
   }
   .game.blank::before{display:none;}
 
-  @media (prefers-reduced-motion:reduce){
+  .homebtn{
+  position:absolute;
+  right:-18px;
+  bottom:-18px;
+  z-index:5;
+  display:block;
+  width:56px;
+  height:56px;
+  line-height:0;
+  filter:drop-shadow(5px 5px 0 #AAB3AC);
+  transition:transform .06s ease, filter .06s ease;
+}
+.homebtn svg{display:block;width:100%;height:100%;}
+.homebtn:active{transform:translate(5px,5px);filter:drop-shadow(0 0 0 #AAB3AC);}
+.homebtn:focus-visible{outline:4px solid var(--blue);outline-offset:4px;border-radius:50%;}
+@media (max-width:360px){ .homebtn{width:50px;height:50px;right:-15px;bottom:-15px;} }
+
+@media (prefers-reduced-motion:reduce){
+
     .game,.brand,.rankbtn{transition:none;}
     .hole{animation:none;}
     .sheet{animation:none;}
@@ -332,6 +350,22 @@
   <div class="stage" id="stage">
     <div class="hole" id="hole"></div>
     <div class="rim"></div>
+    <a class="homebtn" id="homeBtn" target="_top" aria-label="혐규만화">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M24.00 2.84 C27.19 2.93 30.48 3.49 33.44 4.70 C36.39 5.91 39.79 7.65 41.72 10.08 C43.64 12.51 44.41 16.18 44.97 19.28 C45.53 22.39 45.73 25.72 45.08 28.74 C44.42 31.76 43.07 35.11 41.06 37.40 C39.05 39.69 35.87 41.15 33.03 42.47 C30.19 43.79 27.09 45.14 24.00 45.31 C20.91 45.47 17.40 44.72 14.49 43.46 C11.58 42.19 8.30 40.21 6.54 37.72 C4.78 35.22 4.45 31.57 3.93 28.51 C3.41 25.45 2.76 22.23 3.42 19.37 C4.08 16.52 6.10 13.90 7.91 11.36 C9.72 8.82 11.61 5.56 14.29 4.14 C16.97 2.72 20.81 2.75 24.00 2.84 Z" fill="#221D1F"/>
+        <g stroke="#EFF1EC" stroke-width="1.9" stroke-linecap="round" fill="none">
+          <path d="M13.2 8.4V17.9"/>
+          <path d="M20.4 6.2V16.6"/>
+          <path d="M27.6 6.2V16.6"/>
+          <path d="M34.6 8.8V18.3"/>
+        </g>
+        <g fill="#EFF1EC">
+          <ellipse cx="18.1" cy="25.2" rx="1.75" ry="2.05"/>
+          <ellipse cx="29.9" cy="25.2" rx="1.75" ry="2.05"/>
+        </g>
+        <path d="M19.9 32.3a4.6 4.6 0 0 0 8.2 0" fill="none" stroke="#EFF1EC" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </a>
   </div>
 
   <nav class="games" id="games"></nav>
@@ -1284,6 +1318,154 @@ function drawJockey(list, mine){
   neck.position.set(0, -1.32, -0.02);
   head.add(neck);
 
+  /* ─────────────────────────────────────────────
+     팻말 — 가끔 구멍 밑에서 손이 올라와 들어 보입니다.
+     SIGN_URL 은 오른쪽 아래 얼굴 버튼이 쓰는 주소입니다.
+     ───────────────────────────────────────────── */
+  var SIGN_URL = 'https://aaffffffffff123.wixsite.com/aaffffffff';
+
+  (function(){
+    var hb = document.getElementById('homeBtn');
+    if (hb) hb.href = SIGN_URL;
+  })();
+
+  var signGroup = new THREE.Group();
+  scene.add(signGroup);
+
+  var SIGN_W = 0.86, SIGN_H = 0.82;
+
+  var FACE_PATH = 'M24.00 2.84 C27.19 2.93 30.48 3.49 33.44 4.70 C36.39 5.91 39.79 7.65 41.72 10.08 C43.64 12.51 44.41 16.18 44.97 19.28 C45.53 22.39 45.73 25.72 45.08 28.74 C44.42 31.76 43.07 35.11 41.06 37.40 C39.05 39.69 35.87 41.15 33.03 42.47 C30.19 43.79 27.09 45.14 24.00 45.31 C20.91 45.47 17.40 44.72 14.49 43.46 C11.58 42.19 8.30 40.21 6.54 37.72 C4.78 35.22 4.45 31.57 3.93 28.51 C3.41 25.45 2.76 22.23 3.42 19.37 C4.08 16.52 6.10 13.90 7.91 11.36 C9.72 8.82 11.61 5.56 14.29 4.14 C16.97 2.72 20.81 2.75 24.00 2.84 Z';
+
+  function drawFace(g, cx, cy, size) {
+    var k = size / 48;
+    g.save();
+    g.translate(cx, cy);
+    g.scale(k, k);
+    g.translate(-24, -24);
+
+    var grd = g.createRadialGradient(17.5, 14.0, 1.5, 24, 24, 33);
+    grd.addColorStop(0.00, '#3E3739');
+    grd.addColorStop(0.46, '#1E1A1B');
+    grd.addColorStop(1.00, '#0A0809');
+    g.fillStyle = grd;
+    g.fill(new Path2D(FACE_PATH));
+
+    // 광택
+    g.save();
+    g.translate(15.6, 11.4);
+    g.rotate(-0.42);
+    g.beginPath();
+    g.ellipse(0, 0, 5.6, 3.6, 0, 0, Math.PI * 2);
+    g.fillStyle = 'rgba(255,255,255,0.11)';
+    g.fill();
+    g.restore();
+
+    g.strokeStyle = '#EFF1EC';
+    g.lineCap = 'round';
+    g.lineWidth = 2.1;
+    [[13.2, 8.4, 17.9], [20.4, 6.2, 16.6], [27.6, 6.2, 16.6], [34.6, 8.8, 18.3]].forEach(function (h) {
+      g.beginPath();
+      g.moveTo(h[0], h[1]);
+      g.lineTo(h[0], h[2]);
+      g.stroke();
+    });
+
+    g.fillStyle = '#EFF1EC';
+    [[18.1, 25.2], [29.9, 25.2]].forEach(function (e) {
+      g.beginPath();
+      g.ellipse(e[0], e[1], 1.75, 2.05, 0, 0, Math.PI * 2);
+      g.fill();
+    });
+
+    g.lineWidth = 2;
+    g.beginPath();
+    g.arc(24, 31.0, 4.1, 0.28 * Math.PI, 0.72 * Math.PI);
+    g.stroke();
+
+    g.restore();
+  }
+
+  function signTexture() {
+    var c = document.createElement('canvas');
+    c.width = 344; c.height = 328;
+    var g = c.getContext('2d');
+    g.fillStyle = '#FFFFFF';
+    g.fillRect(0, 0, 344, 328);
+    g.strokeStyle = '#1B2430';
+    g.lineWidth = 18;
+    g.strokeRect(9, 9, 326, 310);
+    drawFace(g, 172, 163, 250);
+    var t = new THREE.CanvasTexture(c);
+    t.anisotropy = 8;
+    return t;
+  }
+
+  var SIGN_SIDE = new THREE.MeshStandardMaterial({ color: 0xDDE1DC, roughness: 0.8 });
+  var plate = new THREE.Mesh(
+    new THREE.BoxGeometry(SIGN_W, SIGN_H, 0.06),
+    [ SIGN_SIDE, SIGN_SIDE, SIGN_SIDE, SIGN_SIDE,
+      (function(){
+        var tex = signTexture();
+        return new THREE.MeshStandardMaterial({
+          map: tex, roughness: 0.7,
+          emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.16
+        });
+      })(),
+      SIGN_SIDE ]
+  );
+  signGroup.add(plate);
+
+  // 손 — 팻말 양 끝을 옆에서 쥔다
+  var hands = [];
+  [-1, 1].forEach(function (s) {
+    var arm = new THREE.Group();
+    arm.position.set((SIGN_W / 2 + 0.06) * s, -0.10, 0.03);
+
+    var fist = new THREE.Mesh(new THREE.SphereGeometry(0.245, 26, 22), SKIN);
+    fist.scale.set(0.92, 1.0, 0.95);
+    arm.add(fist);
+
+    // 팻말 앞면을 감싼 손가락 마디
+    for (var f = 0; f < 3; f++) {
+      var knu = new THREE.Mesh(new THREE.SphereGeometry(0.076, 16, 14), SKIN);
+      knu.position.set(-0.13 * s, 0.135 - f * 0.115, 0.115);
+      knu.scale.set(0.95, 1, 1);
+      arm.add(knu);
+    }
+
+    // 엄지 — 팻말 뒤를 받친다
+    var thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.075, 0.27, 14), SKIN);
+    thumb.position.set(-0.02 * s, 0.20, -0.02);
+    thumb.rotation.z = 0.30 * s;
+    arm.add(thumb);
+
+    // 팔뚝 — 바깥으로 벌어지며 구멍 아래로 내려간다
+    var fore = new THREE.Mesh(new THREE.CylinderGeometry(0.185, 0.225, 1.5, 20), SKIN);
+    fore.position.set(0.20 * s, -0.82, -0.06);
+    fore.rotation.z = 0.26 * s;
+    arm.add(fore);
+
+    signGroup.add(arm);
+    hands.push(arm);
+  });
+
+  /* 팻말 상태 */
+  var SIGN_WAIT  = 4;       // 처음 나올 때까지(s)
+  var SIGN_RISE  = 0.55;
+  var SIGN_HOLD  = 7.0;     // 들고 있는 시간(s)
+  var SIGN_FALL  = 0.45;
+  var SIGN_GAP   = 26;      // 들어갔다 다시 나올 때까지(s)
+  var SIGN_DOWN  = -3.2;
+  var SIGN_UP_Y  = -0.60;
+  var SIGN_Z     = 1.12;
+
+  signGroup.position.set(0, SIGN_DOWN, SIGN_Z);
+
+  var signPhase = 'wait';
+  var signT = 0;
+  var signShown = 0;        // 0 숨음 · 1 다 나옴
+
+
   /* 상태 */
   var IDLE = 0.55;          // 기본 회전 속도(rad/s)
   var TAU = 1.35;           // 감속 시정수(s)
@@ -1351,6 +1533,7 @@ function drawJockey(list, mine){
   }
 
   stage.addEventListener('pointerdown', function (e) {
+    if (e.target && e.target.closest && e.target.closest('.homebtn')) return;
     if (pointerId !== null) return;
     pointerId = e.pointerId;
     dragging = true;
@@ -1414,14 +1597,14 @@ function drawJockey(list, mine){
     if (wakeT > 0)  wakeT -= dt;
 
     var hiding = hideT > 0;
-   var busy = hiding || angryT > 0 || cryT > 0 || dragging;
+   var busy = hiding || angryT > 0 || cryT > 0 || dragging || signShown > 0.05;
 
     if (!busy && !reduced && clock - lastAct > SLEEP_AFTER) sleeping = true;
 
     /* 회전 */
     if (dragging) {
       // pointermove 에서 angle 을 직접 돌린다
-    } else if (hiding) {
+    } else if (hiding || signPhase === 'rise' || signPhase === 'hold') {
       vel *= Math.exp(-dt / 0.25);
       var front = 2 * Math.PI * Math.round(angle / (2 * Math.PI));
       angle += (front - angle) * Math.min(1, dt * 7);
@@ -1532,6 +1715,31 @@ function drawJockey(list, mine){
     }
 
     if (wakeT > 0) y += Math.sin(wakeT * 30) * 0.11 * (wakeT / 0.5);
+
+    /* 팻말 */
+    var signBusy = hiding || cryT > 0 || angryT > 0 || dragging;
+    signT += dt;
+    if (signPhase === 'wait') {
+      if (!signBusy && signT >= (clock < SIGN_WAIT + 3 ? SIGN_WAIT : SIGN_GAP)) {
+        if (sleeping) { sleeping = false; wakeT = 0.5; }
+        signPhase = 'rise'; signT = 0;
+      }
+    } else if (signPhase === 'rise') {
+      if (signBusy) { signPhase = 'fall'; signT = 0; }
+      else if (signT >= SIGN_RISE) { signPhase = 'hold'; signT = 0; }
+    } else if (signPhase === 'hold') {
+      if (signBusy || signT >= SIGN_HOLD) { signPhase = 'fall'; signT = 0; }
+    } else if (signPhase === 'fall') {
+      if (signT >= SIGN_FALL) { signPhase = 'wait'; signT = 0; }
+    }
+
+    var sT = signPhase === 'rise' ? Math.min(1, signT / SIGN_RISE)
+           : signPhase === 'hold' ? 1
+           : signPhase === 'fall' ? Math.max(0, 1 - signT / SIGN_FALL) : 0;
+    signShown += (sT * sT * (3 - 2 * sT) - signShown) * Math.min(1, dt * 16);
+    signGroup.position.y = SIGN_DOWN + (SIGN_UP_Y - SIGN_DOWN) * signShown;
+    signGroup.visible = signShown > 0.01;
+    signGroup.rotation.z = Math.sin(clock * 1.6) * 0.025 * signShown;
 
     head.rotation.y = angle;
     head.rotation.z += (rz - head.rotation.z) * Math.min(1, dt * 14);
