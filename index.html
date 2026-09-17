@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>오락실</title>
+<title>혐규오락실</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
 <style>
   :root{
@@ -51,9 +51,14 @@
     box-shadow:4px 4px 0 var(--ink);
     color:var(--ink);
     text-decoration:none;
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
     transition:transform .06s ease, box-shadow .06s ease;
   }
+
+  .brand-tag{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10px;font-weight:900;line-height:1;letter-spacing:0;color:#E0301E;}
+
   a.brand[href]:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);}
   a.brand[href]:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
 
@@ -334,7 +339,7 @@
 <body>
 <div class="shell">
   <div class="top">
-    <a class="brand" id="brand">오락실</a>
+    <a class="brand" id="brand" aria-label="혐규오락실"><span class="brand-tag" aria-hidden="true"><span>혐</span><span>규</span></span>오락실</a>
     <button class="rankbtn" id="rankBtn" type="button"
             aria-label="순위" aria-haspopup="dialog" aria-expanded="false">
       <svg viewBox="0 0 24 18" aria-hidden="true">
