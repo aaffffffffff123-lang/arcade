@@ -1288,35 +1288,369 @@ function drawJockey(list, mine){
   grim.rotation.x = -0.16;
   angry.add(grim);
 
-  // 조는 얼굴
+
+
+
+  // 게임에 집중하는 얼굴 — 기존 상태 이름 sleep은 그대로 사용
   var sleep = new THREE.Group();
   sleep.visible = false;
   head.add(sleep);
 
-  [-1, 1].forEach(function (s) {
-    var lid = new THREE.Mesh(new THREE.TorusGeometry(0.135, 0.036, 10, 26, Math.PI), INK);
-    lid.position.set(0.365 * s, 0.09, 0.855);
-    lid.rotation.z = Math.PI;
-    lid.rotation.x = -0.14;
-    sleep.add(lid);
+  var gameEyes = [];
 
-    var browS = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.05, 0.07), INK);
-    browS.position.set(0.375 * s, 0.39, 0.86);
-    browS.rotation.z = -0.05 * s;
-    browS.rotation.x = -0.18;
-    sleep.add(browS);
+  [-1, 1].forEach(function(s){
+    var eye = new THREE.Mesh(
+      new THREE.SphereGeometry(0.13, 20, 16), INK
+    );
+    eye.position.set(0.365 * s, 0.045, 0.88);
+    eye.scale.set(0.95, 0.94, 0.55);
+    sleep.add(eye);
+    gameEyes.push(eye);
+
+    var brow = new THREE.Mesh(
+      new THREE.BoxGeometry(0.29, 0.05, 0.07), INK
+    );
+    brow.position.set(0.375 * s, 0.37, 0.88);
+    brow.rotation.z = 0.10 * s;
+    sleep.add(brow);
   });
 
-  var doze = new THREE.Mesh(new THREE.SphereGeometry(0.10, 20, 16), INK);
-  doze.position.set(0, -0.38, 0.87);
-  doze.scale.set(1.15, 0.9, 0.35);
-  sleep.add(doze);
+  var gameMouth = new THREE.Mesh(
+    new THREE.BoxGeometry(0.17, 0.035, 0.035), INK
+  );
+  gameMouth.position.set(0, -0.40, 0.93);
+  sleep.add(gameMouth);
 
-  // 콧방울
-  var bubble = new THREE.Mesh(new THREE.SphereGeometry(0.12, 22, 18), SNOT);
-  bubble.position.set(0.17, -0.17, 0.99);
-  bubble.visible = false;
-  sleep.add(bubble);
+
+  // 가로형 휴대용 게임기 + 전용 손
+  // 기존 팻말과 팻말용 손은 그대로 둔다.
+  var gameRig = new THREE.Group();
+  gameRig.visible = false;
+  scene.add(gameRig);
+
+  var gameThumbs = [];
+  var gameShow = 0;
+  var gameKick = 0;
+  var gameNextSound = 0;
+
+  function gameBox(w, h, d, color, x, y, z){
+    var m = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      new THREE.MeshStandardMaterial({
+        color: color,
+        roughness: 0.65
+      })
+    );
+    m.position.set(x, y, z);
+    gameRig.add(m);
+    return m;
+  }
+
+  // 본체와 양쪽 컨트롤러
+  gameBox(1.02, 0.55, 0.16, 0x26313D,  0,    0, 0);
+  gameBox(0.23, 0.60, 0.21, 0x379DD8, -0.62, 0, 0);
+  gameBox(0.23, 0.60, 0.21, 0xEF6255,  0.62, 0, 0);
+
+  // 화면과 조작 버튼은 캐릭터 쪽(-Z)을 향한다.
+  // 관객에게는 게임기 뒷면이 보이는 구조.
+  var screen = gameBox(
+    0.83, 0.40, 0.012, 0xA7DCA0, 0, 0, -0.087
+  );
+  screen.material.emissive.setHex(0x82BB75);
+  screen.material.emissiveIntensity = 0.35;
+
+  // 방향키
+  gameBox(0.15, 0.045, 0.025, 0x16212D, -0.62, 0.05, -0.12);
+  gameBox(0.045, 0.15, 0.025, 0x16212D, -0.62, 0.05, -0.12);
+
+  // 버튼
+  gameBox(0.065, 0.065, 0.025, 0x16212D, 0.59, 0.03, -0.12);
+  gameBox(0.065, 0.065, 0.025, 0x16212D, 0.68, 0.11, -0.12);
+
+  // 뒷면 장식
+  gameBox(0.38, 0.025, 0.012, 0x657480, 0,  0.06, 0.087);
+  gameBox(0.25, 0.025, 0.012, 0x657480, 0, -0.02, 0.087);
+
+  [-1, 1].forEach(function(s){
+    var palm = new THREE.Mesh(
+      new THREE.SphereGeometry(0.17, 20, 16), SKIN
+    );
+    palm.position.set(0.78 * s, -0.015, 0.035);
+    palm.scale.set(0.90, 1.10, 0.85);
+    gameRig.add(palm);
+
+    // 게임기 양옆을 감싸는 손가락
+    for (var f = 0; f < 3; f++){
+      var finger = new THREE.Mesh(
+        new THREE.SphereGeometry(0.055, 12, 10), SKIN
+      );
+      finger.position.set(0.68 * s, 0.12 - f * 0.10, 0.13);
+      finger.scale.set(1.2, 0.8, 0.8);
+      gameRig.add(finger);
+    }
+
+    // 손바닥과 엄지를 잇는 부분
+    var thumbBase = new THREE.Mesh(
+      new THREE.SphereGeometry(0.09, 16, 12), SKIN
+    );
+    thumbBase.position.set(0.69 * s, 0.14, -0.055);
+    thumbBase.scale.set(1, 1.25, 1.15);
+    gameRig.add(thumbBase);
+
+    // 버튼을 누르는 엄지
+    var thumb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.075, 16, 12), SKIN
+    );
+    thumb.position.set(0.57 * s, 0.22, -0.13);
+    thumb.scale.set(0.90, 1.55, 0.85);
+    thumb.rotation.z = -0.45 * s;
+    gameRig.add(thumb);
+    gameThumbs.push(thumb);
+
+    // 팔뚝은 구멍 아래로 이어진다.
+    var fore = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.11, 0.15, 1.1, 16), SKIN
+    );
+    fore.position.set(0.83 * s, -0.65, -0.01);
+    fore.rotation.z = 0.10 * s;
+    gameRig.add(fore);
+  });
+
+
+  // 소리 버튼 — 기존 순위 버튼 옆에 배치
+  var soundBtn = document.createElement('button');
+  soundBtn.type = 'button';
+  soundBtn.className = 'mini';
+  soundBtn.style.minHeight = '42px';
+
+  var rankButton = document.getElementById('rankBtn');
+  var topActions = document.createElement('div');
+
+  topActions.style.cssText =
+    'display:flex;align-items:center;gap:10px;flex:none';
+
+  rankButton.parentNode.insertBefore(topActions, rankButton);
+  topActions.appendChild(soundBtn);
+  topActions.appendChild(rankButton);
+
+  var chipCtx = null;
+  var chipGain = null;
+  var chipOn = true;
+  var chipLevel = -1;
+
+  function paintSoundButton(){
+    var audible =
+      chipOn && chipCtx && chipCtx.state === 'running';
+
+    soundBtn.textContent =
+      !chipOn ? '♪ OFF' : audible ? '♪ ON' : '♪ 켜기';
+
+    soundBtn.setAttribute(
+      'aria-pressed', audible ? 'true' : 'false'
+    );
+    soundBtn.setAttribute(
+      'aria-label',
+      audible ? '게임 소리 끄기' : '게임 소리 켜기'
+    );
+  }
+
+  function unlockChipAudio(){
+    if (!chipOn) return;
+
+    var AC = window.AudioContext || window.webkitAudioContext;
+
+    if (!AC){
+      soundBtn.disabled = true;
+      soundBtn.textContent = '소리 미지원';
+      return;
+    }
+
+    try {
+      if (!chipCtx){
+        chipCtx = new AC();
+        chipGain = chipCtx.createGain();
+        chipGain.gain.value = 0;
+        chipGain.connect(chipCtx.destination);
+        chipCtx.onstatechange = paintSoundButton;
+      }
+
+      if (chipCtx.state !== 'running'){
+        chipCtx.resume().catch(function(){});
+      }
+    } catch(e) {}
+
+    paintSoundButton();
+  }
+
+  function gateChipAudio(active){
+    if (!chipCtx || !chipGain) return;
+
+    // 전체 음량: 0.11
+    var level =
+      active && chipOn && !document.hidden && !window.__rankOpen
+        ? 0.11 : 0;
+
+    if (level === chipLevel) return;
+    chipLevel = level;
+
+    chipGain.gain.setTargetAtTime(
+      level, chipCtx.currentTime, 0.02
+    );
+  }
+
+  soundBtn.addEventListener('click', function(){
+    if (chipOn && chipCtx && chipCtx.state === 'running'){
+      chipOn = false;
+      gateChipAudio(false);
+    } else {
+      chipOn = true;
+      unlockChipAudio();
+      gameNextSound = 0;
+    }
+
+    paintSoundButton();
+  });
+
+  // 첫 클릭으로 오디오 활성화. OFF로 껐다면 다시 켜지 않는다.
+  document.addEventListener('click', function(e){
+    if (!soundBtn.contains(e.target)) unlockChipAudio();
+  }, true);
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) gateChipAudio(false);
+  });
+
+  paintSoundButton();
+
+
+  // 녹음 파일 없이 합성하는 8비트 효과음
+  function chipSound(kind){
+    if (
+      !chipOn || !chipCtx || !chipGain ||
+      chipCtx.state !== 'running' ||
+      document.hidden || window.__rankOpen
+    ) return;
+
+    function note(f0, f1, delay, duration, type){
+      var t = chipCtx.currentTime + delay;
+      var osc = chipCtx.createOscillator();
+      var gain = chipCtx.createGain();
+
+      osc.type = type || 'square';
+
+      osc.frequency.setValueAtTime(f0, t);
+      osc.frequency.exponentialRampToValueAtTime(
+        f1, t + duration
+      );
+
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(0.23, t + 0.006);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001, t + duration
+      );
+
+      osc.connect(gain);
+      gain.connect(chipGain);
+
+      osc.start(t);
+      osc.stop(t + duration + 0.02);
+
+      osc.onended = function(){
+        osc.disconnect();
+        gain.disconnect();
+      };
+    }
+
+    if (kind === 0){
+      // 점프: 뿅!
+      note(320, 1100, 0, 0.16);
+
+    } else if (kind === 1){
+      // 코인: 띠링!
+      note(980, 980, 0, 0.055);
+      note(1480, 1480, 0.065, 0.13);
+
+    } else if (kind === 2){
+      // 발사: 삐융!
+      note(1300, 140, 0, 0.18);
+
+    } else if (kind === 3){
+      // 파워업: 또로로롱!
+      [440, 554, 659, 880].forEach(function(f, i){
+        note(f, f, i * 0.065, 0.085);
+      });
+
+    } else {
+      // 실수: 뿌웅
+      note(290, 95, 0, 0.25, 'triangle');
+    }
+  }
+
+
+  // 게임기를 들고 플레이하는 동작
+  function updateGaming(dt, active){
+    gameShow = Math.max(
+      0,
+      Math.min(1, gameShow + dt * (active ? 3.5 : -9))
+    );
+
+    gameKick = Math.max(0, gameKick - dt * 4);
+
+    gateChipAudio(active);
+
+    if (active){
+      gameNextSound -= dt;
+
+      if (gameNextSound <= 0){
+        var kind = Math.floor(Math.random() * 5);
+
+        chipSound(kind);
+
+        // 점프·파워업 소리가 날 때 살짝 움찔
+        gameKick = kind === 0 || kind === 3 ? 1 : 0.35;
+        gameNextSound = 0.55 + Math.random() * 0.85;
+      }
+    } else {
+      gameNextSound = 0;
+    }
+
+    var show = gameShow * gameShow * (3 - 2 * gameShow);
+
+    gameRig.visible = gameShow > 0.001;
+
+    gameRig.position.set(
+      Math.sin(clock * 1.8) * 0.035,
+      -2.65 + show * 1.46 + gameKick * 0.055 * show,
+      1.20
+    );
+
+    gameRig.rotation.set(
+      0.42 + Math.sin(clock * 2.2) * 0.035,
+      0,
+      Math.sin(clock * 2.6) * 0.035
+    );
+
+    // 좌우 엄지가 서로 다른 박자로 연타
+    gameThumbs.forEach(function(thumb, i){
+      var tap = Math.max(
+        0,
+        Math.sin(clock * (i ? 21 : 15) + i * 2)
+      );
+
+      thumb.position.y = 0.22 - tap * 0.035;
+      thumb.position.z = -0.13 + tap * 0.025;
+      thumb.rotation.x = tap * 0.35;
+    });
+
+    gameEyes.forEach(function(eye){
+      eye.scale.y = clock % 4.1 < 0.12 ? 0.15 : 0.94;
+    });
+  }
+
+
+
+
+
 
   // 목
   var neck = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.52, 0.9, 28), SKIN);
@@ -1481,7 +1815,7 @@ function drawJockey(list, mine){
   var HIT_TIME = 0.42;      // 맞고 휘청이는 시간(s)
   var COMBO = 1.6;          // 연타로 치는 간격(s)
   var HIDE_TOTAL = 3.4;     // 숨었다 나오는 전체 시간(s)
-  var SLEEP_AFTER = 30;     // 이만큼 안 건드리면 존다(s)
+    var SLEEP_AFTER = 8;  // 마지막 조작 후 게임을 시작하는 대기시간(s)
 
   var angle = 0;
   var vel = reduced ? 0 : IDLE;
@@ -1589,7 +1923,12 @@ function drawJockey(list, mine){
 
   function frame(now) {
     // 순위판이 덮고 있는 동안에는 그리지 않습니다
-    if (window.__rankOpen) { prev = now; requestAnimationFrame(frame); return; }
+    if (window.__rankOpen || document.hidden) {
+      gateChipAudio(false);
+      prev = now;
+      requestAnimationFrame(frame);
+      return;
+    }
 
     var dt = Math.min((now - prev) / 1000, 0.05);
     prev = now;
@@ -1601,15 +1940,35 @@ function drawJockey(list, mine){
     if (hideT > 0)  hideT -= dt;
     if (wakeT > 0)  wakeT -= dt;
 
-    var hiding = hideT > 0;
-   var busy = hiding || angryT > 0 || cryT > 0 || dragging || signShown > 0.05;
 
-    if (!busy && !reduced && clock - lastAct > SLEEP_AFTER) sleeping = true;
+
+
+       var hiding = hideT > 0;
+
+    var busy =
+      hiding ||
+      angryT > 0 ||
+      cryT > 0 ||
+      hitT > 0 ||
+      dragging ||
+      signShown > 0.01 ||
+      signPhase === 'rise' ||
+      signPhase === 'hold';
+
+    sleeping =
+      !busy &&
+      !reduced &&
+      clock - lastAct > SLEEP_AFTER;
 
     /* 회전 */
     if (dragging) {
       // pointermove 에서 angle 을 직접 돌린다
-    } else if (hiding || signPhase === 'rise' || signPhase === 'hold') {
+    } else if (
+      hiding ||
+      sleeping ||
+      signPhase === 'rise' ||
+      signPhase === 'hold'
+    ) {
       vel *= Math.exp(-dt / 0.25);
       var front = 2 * Math.PI * Math.round(angle / (2 * Math.PI));
       angle += (front - angle) * Math.min(1, dt * 7);
@@ -1673,15 +2032,21 @@ function drawJockey(list, mine){
       }
     }
 
-    /* 콧방울 */
-    if (mode === 'sleep') {
-      var bp = (clock % 4.2) / 4.2;
-      var g = bp < 0.86 ? bp / 0.86 : 0;
-      bubble.visible = g > 0.04;
-      bubble.scale.setScalar(0.2 + g * 1.05);
-    } else {
-      bubble.visible = false;
-    }
+
+
+
+     /* 게임기와 손 동작 */
+    updateGaming(
+      dt,
+      sleeping &&
+      mode === 'sleep' &&
+      signPhase === 'wait' &&
+      signShown <= 0.01 &&
+      Math.cos(angle) > 0.96
+    );
+
+
+
 
     /* 자세 */
     var y = -0.05 + (mode === 'sleep' ? 0 : Math.sin(clock * 1.05) * 0.018);
@@ -1710,10 +2075,13 @@ function drawJockey(list, mine){
       rz = Math.sin(clock * 26) * 0.014;
       y += Math.sin(clock * 24) * 0.008;
     } else if (mode === 'sleep') {
-      var nod = Math.sin(clock * 1.5);
-      rz = 0.13 + Math.sin(clock * 0.7) * 0.03;
-      rx += 0.11 + Math.max(0, nod) * 0.13;
-      y += -0.03 - Math.max(0, nod) * 0.06;
+      var lean = Math.sin(clock * 1.8);
+
+      // 게임기를 내려다보며 좌우로 살짝 기운다.
+      rz = lean * 0.035;
+      rx = 0.13 + Math.sin(clock * 2.2) * 0.018;
+      px = lean * 0.025;
+      y += -0.045 + gameKick * 0.035;
     } else if (mode === 'dizzy') {
       rz = Math.sin(now / 90) * 0.075;
       y += Math.sin(now / 62) * 0.035;
