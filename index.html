@@ -82,6 +82,47 @@
   .rankbtn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink);}
   .rankbtn:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
 
+  /* 소리 아이콘 버튼 */
+  .soundbtn{
+    flex:none;
+    display:grid;
+    place-items:center;
+    width:42px;
+    height:42px;
+    padding:4px;
+    border:0;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    line-height:0;
+    filter:drop-shadow(2px 2px 0 #AAB3AC);
+    transition:transform .06s ease, filter .06s ease, opacity .06s ease;
+  }
+
+  .soundbtn svg{
+    display:block;
+    width:31px;
+    height:31px;
+    overflow:visible;
+  }
+
+  .soundbtn:active{
+    transform:translate(2px,2px);
+    filter:none;
+  }
+
+  .soundbtn:focus-visible{
+    outline:3px solid var(--blue);
+    outline-offset:1px;
+    border-radius:50%;
+  }
+
+  .soundbtn:disabled{
+    opacity:.35;
+    cursor:default;
+  }
+
+
   /* 순위판 */
   .ovl{
     position:fixed;
@@ -510,14 +551,50 @@ jockey:
       '<circle cx="15.4" cy="19.2" r="2.3" fill="#1B2430"/>' +
     '</svg>',
   whale:
-    '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
-      '<g stroke="#1B2430" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none">' +
-        '<path d="M24.6 8.4L30.4 5.4v14.2l-5.8-3z" fill="#7FC5D9"/>' +
-        '<ellipse cx="14.6" cy="12.6" rx="10.4" ry="6.2" fill="#9FD6E3"/>' +
-        '<path d="M5.4 15.4c4 2 9 2.2 13.4 .6"/>' +
-        '<path d="M11.4 6.6l-1.8-4M11.4 6.6l2.2-3.4"/>' +
+    '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
+
+      // 둥글고 커다란 고래 몸통
+      '<g stroke="#1B2430" stroke-width="1.8" ' +
+         'stroke-linecap="round" stroke-linejoin="round">' +
+
+        '<path d="M3.5 16.8c0-5.8 5.7-9.2 13.8-9.2 ' +
+          '7.4 0 12 2.9 13.5 7.1l0.9 2.5 ' +
+          'c-2.5 3.8-7 5.6-13.9 5.6 ' +
+          'c-8.7 0-14.3-2.2-14.3-6z" ' +
+          'fill="#86CDE0"/>' +
+
+        // 두 갈래 고래 꼬리
+        '<path d="M30.1 14.7c3.2-1.2 5.7-3.7 7.3-6 ' +
+          'c0.5 3.4-0.3 5.7-2.3 7.1 ' +
+          'c2 0.7 3.6 2.2 4.5 4.5 ' +
+          'c-3.4 0.2-6.2-0.6-8.2-2.4z" ' +
+          'fill="#72BBD1"/>' +
+
+        // 입과 배 부분
+        '<path d="M5.2 17.8c4.8 1.8 11.6 2.2 17 0.5" ' +
+          'fill="none"/>' +
+
+        // 아래쪽 가슴지느러미
+        '<path d="M18.3 21.5 ' +
+          'C19.6 24.4 21.8 25.7 24.2 25.5 ' +
+          'C23.1 23.3 22.1 21.6 20.8 20.3" ' +
+          'fill="#72BBD1"/>' +
+
       '</g>' +
-      '<circle cx="8.6" cy="11.4" r="1.3" fill="#1B2430"/>' +
+
+      // 눈
+      '<circle cx="8.2" cy="14.4" r="1.15" fill="#1B2430"/>' +
+
+      // 고래 물줄기
+      '<g fill="none" stroke="#49A9C6" stroke-width="1.8" ' +
+         'stroke-linecap="round">' +
+
+        '<path d="M12.6 6.9C12.4 4.6 11.4 3.2 9.5 1.9"/>' +
+        '<path d="M13 6.9C13.5 4.5 14.8 3 16.8 1.9"/>' +
+        '<path d="M12.8 6.6C12.8 4.6 12.7 3 13.3 1.5"/>' +
+
+      '</g>' +
+
     '</svg>',
   split:
     '<svg class="ico" viewBox="0 0 32 24" aria-hidden="true">' +
@@ -1422,8 +1499,7 @@ function drawJockey(list, mine){
   // 소리 버튼 — 기존 순위 버튼 옆에 배치
   var soundBtn = document.createElement('button');
   soundBtn.type = 'button';
-  soundBtn.className = 'mini';
-  soundBtn.style.minHeight = '42px';
+  soundBtn.className = 'soundbtn';
 
   var rankButton = document.getElementById('rankBtn');
   var topActions = document.createElement('div');
@@ -1440,21 +1516,39 @@ function drawJockey(list, mine){
   var chipOn = true;
   var chipLevel = -1;
 
-  function paintSoundButton(){
-    var audible =
-      chipOn && chipCtx && chipCtx.state === 'running';
 
-    soundBtn.textContent =
-      !chipOn ? '♪ OFF' : audible ? '♪ ON' : '♪ 켜기';
+  var SOUND_ON_ICON =
+    '<svg viewBox="0 0 32 32" aria-hidden="true">' +
+      '<path d="M4.5 12h6L18 6v20l-7.5-6h-6z" fill="currentColor"/>' +
+      '<path d="M22 11.2c1.8 1.4 2.8 3 2.8 4.8s-1 3.4-2.8 4.8M24.8 7.8c3 2.2 4.7 5 4.7 8.2s-1.7 6-4.7 8.2" ' +
+        'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' +
+    '</svg>';
+
+  var SOUND_OFF_ICON =
+    '<svg viewBox="0 0 32 32" aria-hidden="true">' +
+      '<path d="M4.5 12h6L18 6v20l-7.5-6h-6z" fill="currentColor"/>' +
+      '<path d="M6 6l20 20" fill="none" stroke="currentColor" ' +
+        'stroke-width="3" stroke-linecap="round"/>' +
+    '</svg>';
+
+  function paintSoundButton(){
+    soundBtn.innerHTML =
+      chipOn ? SOUND_ON_ICON : SOUND_OFF_ICON;
 
     soundBtn.setAttribute(
-      'aria-pressed', audible ? 'true' : 'false'
+      'aria-pressed',
+      chipOn ? 'true' : 'false'
     );
+
     soundBtn.setAttribute(
       'aria-label',
-      audible ? '게임 소리 끄기' : '게임 소리 켜기'
+      chipOn ? '게임 소리 끄기' : '게임 소리 켜기'
     );
+
+    soundBtn.title =
+      chipOn ? '소리 끄기' : '소리 켜기';
   }
+
 
   function unlockChipAudio(){
     if (!chipOn) return;
@@ -1462,8 +1556,14 @@ function drawJockey(list, mine){
     var AC = window.AudioContext || window.webkitAudioContext;
 
     if (!AC){
+      chipOn = false;
       soundBtn.disabled = true;
-      soundBtn.textContent = '소리 미지원';
+      paintSoundButton();
+      soundBtn.setAttribute(
+        'aria-label',
+        '소리를 지원하지 않는 브라우저입니다'
+      );
+      soundBtn.title = '소리 미지원';
       return;
     }
 
@@ -1501,13 +1601,13 @@ function drawJockey(list, mine){
   }
 
   soundBtn.addEventListener('click', function(){
-    if (chipOn && chipCtx && chipCtx.state === 'running'){
-      chipOn = false;
-      gateChipAudio(false);
-    } else {
-      chipOn = true;
+    chipOn = !chipOn;
+
+    if (chipOn){
       unlockChipAudio();
       gameNextSound = 0;
+    } else {
+      gateChipAudio(false);
     }
 
     paintSoundButton();
