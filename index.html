@@ -677,11 +677,22 @@ jockey:
         '<ellipse cx="17.6" cy="7.2" rx="1" ry="1.3"/>' +
         '<ellipse cx="15.8" cy="5.4" rx=".8" ry="1.1"/>' +
       '</g>' +
+    '</svg>',
+
+  orbit:
+    '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
+      '<circle cx="19" cy="16" r="9.5" fill="#B6C8EC" stroke="#1B2430" stroke-width="1.8"/>' +
+      '<path d="M19 6.5l-3.5 7 5 4-4 7.5" fill="none" stroke="#1B2430" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M7 12C-1 22 11 27 26 19C37 13 37 7 29 8" fill="none" stroke="#5269A9" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M31 2v5M28.5 4.5h5" stroke="#1B2430" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<circle cx="5" cy="5" r="1.2" fill="#5269A9"/>' +
     '</svg>'
 };
 
+// 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
   { name: '나 기르기',            url: 'https://aaffffffffff123-lang.github.io/self-cultivation/', chip: '#3FB68B', icon: ICONS.grow,     desc: '' },
+  { name: 'FIRST CONTACTS',       url: 'https://aaffffffffff123-lang.github.io/kings-orbit/',      chip: '#5269A9', icon: ICONS.orbit,    desc: '' },
   { name: '바퀴벌레',            url: 'https://aaffffffffff123-lang.github.io/roach/',        chip: '#8A4B1E', icon: ICONS.roach,    desc: '' },
   { name: '자키 라이더',          url: 'https://aaffffffffff123-lang.github.io/jockey-rider/', chip: '#F26B1D', icon: ICONS.jockey,   desc: '' },
   { name: '비둘기 게임',          url: 'https://aaffffffffff123-lang.github.io/pigeon/',       chip: '#2E5B45', icon: ICONS.pigeon,   desc: '' },
@@ -690,44 +701,12 @@ var GAMES = [
   { name: '고래 칭찬하기',        url: 'https://aaffffffffff123-lang.github.io/whale/',        chip: '#1E93B0', icon: ICONS.whale,    desc: '' },
   { name: '지네 못 걷기',         url: 'https://aaffffffffff123-lang.github.io/jine/',         chip: '#C0563F', icon: ICONS.jine,     desc: '' },
   { name: '지게차 연수원',        url: 'https://aaffffffffff123-lang.github.io/forklift/',     chip: '#F2600C', icon: ICONS.forklift, desc: '' },
-  { name: '심야물류센터3층',      url: 'https://aaffffffffff123-lang.github.io/floor3/',       chip: '#FFC400', icon: ICONS.cart,     desc: '' },
-  { name: '' }
+  { name: '심야물류센터3층',      url: 'https://aaffffffffff123-lang.github.io/floor3/',       chip: '#FFC400', icon: ICONS.cart,     desc: '' }
 ];
 
-// FIRST CONTACTS — 첫 번째 카드
-GAMES.unshift({
-  name: 'FIRST CONTACTS',
-  url: 'https://aaffffffffff123-lang.github.io/kings-orbit/',
-  chip: '#5269A9',
-  icon:
-    '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
-
-      // 행성
-      '<circle cx="19" cy="16" r="9.5" ' +
-        'fill="#B6C8EC" stroke="#1B2430" stroke-width="1.8"/>' +
-
-      // 지각의 균열
-      '<path d="M19 6.5l-3.5 7 5 4-4 7.5" ' +
-        'fill="none" stroke="#1B2430" stroke-width="1.6" ' +
-        'stroke-linejoin="round"/>' +
-
-      // 궤도
-      '<path d="M7 12C-1 22 11 27 26 19C37 13 37 7 29 8" ' +
-        'fill="none" stroke="#5269A9" stroke-width="2" ' +
-        'stroke-linecap="round"/>' +
-
-      // 별
-      '<path d="M31 2v5M28.5 4.5h5" ' +
-        'stroke="#1B2430" stroke-width="1.6" stroke-linecap="round"/>' +
-      '<circle cx="5" cy="5" r="1.2" fill="#5269A9"/>' +
-
-    '</svg>',
-  desc: ''
-});
-
-// 카드가 짝수로 맞도록 맨 끝의 불필요한 빈 칸 제거
-if (GAMES.length % 2 === 1 && !GAMES[GAMES.length - 1].name) {
-  GAMES.pop();
+// 카드 수가 홀수면 마지막 한 칸을 빈 칸으로 채웁니다 (두 칸씩 나란히 보이도록)
+if (GAMES.length % 2 === 1) {
+  GAMES.push({ name: '' });
 }
 
 
