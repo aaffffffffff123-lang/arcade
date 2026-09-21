@@ -453,6 +453,22 @@ var HOME_URL = '';
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+  bowl:
+    '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
+      '<g stroke="#1B2430" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M6 8.5c0 11.5 5.6 19 14 19s14-7.5 14-19z" fill="#C9A15A"/>' +
+        '<path d="M25.5 27C30.2 24.4 33.6 17.6 34 8.5c-1.3 8.5-4.2 14.8-8.5 18.5z" fill="#A67B3C" stroke="none"/>' +
+        '<ellipse cx="20" cy="8.5" rx="14" ry="3.6" fill="#5A3A1C"/>' +
+      '</g>' +
+      '<g stroke="#1B2430" stroke-width="2" stroke-linecap="round" fill="none">' +
+        '<path d="M10.6 15.2l5.2-1.8M29.4 15.2l-5.2-1.8"/>' +
+      '</g>' +
+      '<path d="M15.6 24.2c.6-4.2 8.2-4.2 8.8 0-2.2 1.6-6.6 1.6-8.8 0z" fill="#1B2430"/>' +
+      '<g fill="#86CDE0" stroke="#1B2430" stroke-width="1.2" stroke-linejoin="round">' +
+        '<path d="M12.6 17.2c-1.6 2.3-2.4 3.7-2.4 4.6a2.4 2.4 0 0 0 4.8 0c0-.9-.8-2.3-2.4-4.6z"/>' +
+        '<path d="M27.4 17.2c-1.6 2.3-2.4 3.7-2.4 4.6a2.4 2.4 0 0 0 4.8 0c0-.9-.8-2.3-2.4-4.6z"/>' +
+      '</g>' +
+    '</svg>',
 
 
 
@@ -691,6 +707,7 @@ jockey:
 
 // 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
+  { name: 'CRYING BOWL',          url: 'https://aaffffffffff123-lang.github.io/crying-bowl/',  chip: '#C9A15A', icon: ICONS.bowl,     desc: '' },
   { name: '나 기르기',            url: 'https://aaffffffffff123-lang.github.io/self-cultivation/', chip: '#3FB68B', icon: ICONS.grow,     desc: '' },
   { name: 'FIRST CONTACTS',       url: 'https://aaffffffffff123-lang.github.io/kings-orbit/',      chip: '#5269A9', icon: ICONS.orbit,    desc: '' },
   { name: '바퀴벌레',            url: 'https://aaffffffffff123-lang.github.io/roach/',        chip: '#8A4B1E', icon: ICONS.roach,    desc: '' },
