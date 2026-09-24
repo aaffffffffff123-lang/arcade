@@ -375,25 +375,25 @@
 .coinbtn{
   position:absolute;
   right:-18px;
-  bottom:-20px;
+  bottom:-18px;
   z-index:5;
-  width:44px;
-  height:80px;
+  width:56px;
+  height:56px;
   padding:0;
   border:0;
   background:transparent;
   color:var(--ink);
   cursor:pointer;
   line-height:0;
-  filter:drop-shadow(3px 3px 0 #AAB3AC);
+  filter:drop-shadow(5px 5px 0 #AAB3AC);
   transition:transform .06s ease, filter .06s ease;
 }
-.coinbtn svg{display:block;width:36px;height:72px;overflow:visible;margin:auto;}
+.coinbtn svg{display:block;width:48px;height:48px;overflow:visible;margin:auto;}
 .coinbtn:active{transform:translate(5px,5px);filter:none;}
-.coinbtn:focus-visible{outline:4px solid var(--blue);outline-offset:4px;}
+.coinbtn:focus-visible{outline:4px solid var(--blue);outline-offset:4px;border-radius:50%;}
 @media (max-width:360px){
-  .coinbtn{width:40px;height:72px;right:-14px;bottom:-18px;}
-  .coinbtn svg{width:32px;height:64px;}
+  .coinbtn{width:50px;height:50px;right:-15px;bottom:-15px;}
+  .coinbtn svg{width:44px;height:44px;}
 }
 
 /* 후원 확인창 */
@@ -491,44 +491,10 @@
     </a>
     <button class="coinbtn" id="coinBtn" type="button"
             aria-label="후원하기" aria-haspopup="dialog" aria-expanded="false">
-      <svg viewBox="0 0 42 84" aria-hidden="true">
-        <defs>
-          <linearGradient id="coinPlate" x1="0" x2="1">
-            <stop offset="0" stop-color="#7E878C"/>
-            <stop offset=".18" stop-color="#E5E7E5"/>
-            <stop offset=".52" stop-color="#9BA2A5"/>
-            <stop offset=".8" stop-color="#ECEEEC"/>
-            <stop offset="1" stop-color="#737D82"/>
-          </linearGradient>
-          <radialGradient id="coinCup" cx="38%" cy="32%">
-            <stop offset="0" stop-color="#FFFFFF"/>
-            <stop offset=".48" stop-color="#D9DDDC"/>
-            <stop offset=".72" stop-color="#8B959A"/>
-            <stop offset="1" stop-color="#343D43"/>
-          </radialGradient>
-          <pattern id="coinGrain" width="4" height="4" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r=".45" fill="#FFFFFF" opacity=".34"/>
-            <circle cx="3" cy="2.7" r=".45" fill="#30383D" opacity=".24"/>
-          </pattern>
-        </defs>
-        <rect x="1" y="1" width="40" height="82" rx="2.5" fill="url(#coinPlate)" stroke="#1B2430" stroke-width="2"/>
-        <rect x="4" y="4" width="34" height="76" rx="1" fill="#A5ABAD" stroke="#505A60" stroke-width="1"/>
-        <rect x="4" y="4" width="34" height="76" rx="1" fill="url(#coinGrain)"/>
-        <g fill="url(#coinCup)" stroke="#283137" stroke-width="1">
-          <circle cx="7" cy="7" r="1.5"/>
-          <circle cx="35" cy="7" r="1.5"/>
-          <circle cx="7" cy="77" r="1.5"/>
-          <circle cx="35" cy="77" r="1.5"/>
-        </g>
-        <circle cx="21" cy="21" r="14" fill="url(#coinCup)" stroke="#424B50" stroke-width="1.5"/>
-        <circle cx="21" cy="21" r="10.2" fill="#D8DCDB" opacity=".6"/>
-        <rect x="19.1" y="9.5" width="3.8" height="23" rx="1.9" fill="#11171B"/>
-        <rect x="7.5" y="38" width="27" height="15.5" rx="1" fill="#AEB4B6" stroke="#596268" stroke-width="1"/>
-        <text x="21" y="44.8" text-anchor="middle" fill="#30383D" font-size="5.2" font-weight="900" font-family="Arial, sans-serif">INSERT</text>
-        <text x="21" y="50.1" text-anchor="middle" fill="#30383D" font-size="5.2" font-weight="900" font-family="Arial, sans-serif">COIN</text>
-        <rect x="19.2" y="57" width="3.6" height="16" rx="1.5" fill="#11171B"/>
-        <path d="M13.5 69.5h15l-1 8.5h-13z" fill="url(#coinCup)" stroke="#424B50" stroke-width="1"/>
-        <path d="M14 68.5h14v4.5H14z" fill="#E7E9E7" opacity=".72"/>
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="20.5" fill="#AAB3AC" stroke="#1B2430" stroke-width="3"/>
+        <circle cx="24" cy="24" r="14.5" fill="#EFF1EC" stroke="#69747B" stroke-width="2"/>
+        <path d="M24 11.5V36.5" fill="none" stroke="#1B2430" stroke-width="6" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
@@ -577,6 +543,9 @@ var HOME_URL = '';
   var go = document.getElementById('supportGo');
 
   function open(){
+    if (typeof window.__playArcadeCoinSound === 'function') {
+      window.__playArcadeCoinSound();
+    }
     ovl.hidden = false;
     trigger.setAttribute('aria-expanded', 'true');
     cancel.focus();
@@ -1876,6 +1845,64 @@ function drawJockey(list, mine){
       note(290, 95, 0, 0.25, 'triangle');
     }
   }
+
+  // 후원 버튼 — 짧은 금속성 동전 투입음
+  function playCoinInsertSound(){
+    if (!chipOn || document.hidden) return;
+
+    unlockChipAudio();
+    if (!chipCtx) return;
+
+    function play(){
+      if (!chipOn || chipCtx.state !== 'running') return;
+
+      var t = chipCtx.currentTime;
+      var out = chipCtx.createGain();
+
+      out.gain.setValueAtTime(0.15, t);
+      out.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+      out.connect(chipCtx.destination);
+
+      function ping(f0, f1, delay, duration, type, level){
+        var at = t + delay;
+        var osc = chipCtx.createOscillator();
+        var gain = chipCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(f0, at);
+        osc.frequency.exponentialRampToValueAtTime(f1, at + duration);
+
+        gain.gain.setValueAtTime(0.0001, at);
+        gain.gain.linearRampToValueAtTime(level, at + 0.004);
+        gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+
+        osc.connect(gain);
+        gain.connect(out);
+        osc.start(at);
+        osc.stop(at + duration + 0.02);
+
+        osc.onended = function(){
+          osc.disconnect();
+          gain.disconnect();
+        };
+      }
+
+      // 금속에 부딪히는 딸깍 + 안으로 떨어지는 짧은 챙
+      ping(420, 180, 0,     0.035, 'square',   0.14);
+      ping(1850, 1250, 0,  0.060, 'triangle', 0.50);
+      ping(1150, 850, 0.04, 0.150, 'sine',     0.38);
+
+      window.setTimeout(function(){ out.disconnect(); }, 320);
+    }
+
+    if (chipCtx.state === 'running') {
+      play();
+    } else {
+      chipCtx.resume().then(play).catch(function(){});
+    }
+  }
+
+  window.__playArcadeCoinSound = playCoinInsertSound;
 
 
   // 게임기를 들고 플레이하는 동작
