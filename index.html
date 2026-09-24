@@ -356,7 +356,7 @@
 
   .homebtn{
   position:absolute;
-  right:-18px;
+  left:-18px;
   bottom:-18px;
   z-index:5;
   display:block;
@@ -369,13 +369,88 @@
 .homebtn svg{display:block;width:100%;height:100%;}
 .homebtn:active{transform:translate(5px,5px);filter:drop-shadow(0 0 0 #AAB3AC);}
 .homebtn:focus-visible{outline:4px solid var(--blue);outline-offset:4px;border-radius:50%;}
-@media (max-width:360px){ .homebtn{width:50px;height:50px;right:-15px;bottom:-15px;} }
+@media (max-width:360px){ .homebtn{width:50px;height:50px;left:-15px;bottom:-15px;} }
+
+/* 오락기 동전 투입구 */
+.coinbtn{
+  position:absolute;
+  right:-18px;
+  bottom:-20px;
+  z-index:5;
+  width:44px;
+  height:80px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  cursor:pointer;
+  line-height:0;
+  filter:drop-shadow(3px 3px 0 #AAB3AC);
+  transition:transform .06s ease, filter .06s ease;
+}
+.coinbtn svg{display:block;width:36px;height:72px;overflow:visible;margin:auto;}
+.coinbtn:active{transform:translate(5px,5px);filter:none;}
+.coinbtn:focus-visible{outline:4px solid var(--blue);outline-offset:4px;}
+@media (max-width:360px){
+  .coinbtn{width:40px;height:72px;right:-14px;bottom:-18px;}
+  .coinbtn svg{width:32px;height:64px;}
+}
+
+/* 후원 확인창 */
+.support-ovl{
+  position:fixed;
+  inset:0;
+  z-index:70;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:rgba(27,36,48,.42);
+}
+.support-ovl[hidden]{display:none;}
+.support-sheet{
+  width:min(100%,320px);
+  padding:24px;
+  background:var(--paper);
+  border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  animation:rise .16s ease-out;
+}
+.support-sheet h2{
+  margin:0 0 22px;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.support-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.support-choice{
+  min-height:46px;
+  display:grid;
+  place-items:center;
+  padding:10px 12px;
+  border:3px solid var(--ink);
+  background:var(--paper);
+  box-shadow:3px 3px 0 var(--ink);
+  color:var(--ink);
+  font:inherit;
+  font-size:15px;
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .06s ease, box-shadow .06s ease;
+}
+.support-choice.go{background:#FFC400;}
+.support-choice:active{transform:translate(3px,3px);box-shadow:none;}
+.support-choice:focus-visible{outline:4px solid var(--blue);outline-offset:3px;}
 
 @media (prefers-reduced-motion:reduce){
 
-    .game,.brand,.rankbtn{transition:none;}
+    .game,.brand,.rankbtn,.coinbtn,.support-choice{transition:none;}
     .hole{animation:none;}
-    .sheet{animation:none;}
+    .sheet,.support-sheet{animation:none;}
   }
 </style>
 </head>
@@ -414,9 +489,63 @@
         <path d="M19.9 32.3a4.6 4.6 0 0 0 8.2 0" fill="none" stroke="#EFF1EC" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </a>
+    <button class="coinbtn" id="coinBtn" type="button"
+            aria-label="후원하기" aria-haspopup="dialog" aria-expanded="false">
+      <svg viewBox="0 0 42 84" aria-hidden="true">
+        <defs>
+          <linearGradient id="coinPlate" x1="0" x2="1">
+            <stop offset="0" stop-color="#7E878C"/>
+            <stop offset=".18" stop-color="#E5E7E5"/>
+            <stop offset=".52" stop-color="#9BA2A5"/>
+            <stop offset=".8" stop-color="#ECEEEC"/>
+            <stop offset="1" stop-color="#737D82"/>
+          </linearGradient>
+          <radialGradient id="coinCup" cx="38%" cy="32%">
+            <stop offset="0" stop-color="#FFFFFF"/>
+            <stop offset=".48" stop-color="#D9DDDC"/>
+            <stop offset=".72" stop-color="#8B959A"/>
+            <stop offset="1" stop-color="#343D43"/>
+          </radialGradient>
+          <pattern id="coinGrain" width="4" height="4" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r=".45" fill="#FFFFFF" opacity=".34"/>
+            <circle cx="3" cy="2.7" r=".45" fill="#30383D" opacity=".24"/>
+          </pattern>
+        </defs>
+        <rect x="1" y="1" width="40" height="82" rx="2.5" fill="url(#coinPlate)" stroke="#1B2430" stroke-width="2"/>
+        <rect x="4" y="4" width="34" height="76" rx="1" fill="#A5ABAD" stroke="#505A60" stroke-width="1"/>
+        <rect x="4" y="4" width="34" height="76" rx="1" fill="url(#coinGrain)"/>
+        <g fill="url(#coinCup)" stroke="#283137" stroke-width="1">
+          <circle cx="7" cy="7" r="1.5"/>
+          <circle cx="35" cy="7" r="1.5"/>
+          <circle cx="7" cy="77" r="1.5"/>
+          <circle cx="35" cy="77" r="1.5"/>
+        </g>
+        <circle cx="21" cy="21" r="14" fill="url(#coinCup)" stroke="#424B50" stroke-width="1.5"/>
+        <circle cx="21" cy="21" r="10.2" fill="#D8DCDB" opacity=".6"/>
+        <rect x="19.1" y="9.5" width="3.8" height="23" rx="1.9" fill="#11171B"/>
+        <rect x="7.5" y="38" width="27" height="15.5" rx="1" fill="#AEB4B6" stroke="#596268" stroke-width="1"/>
+        <text x="21" y="44.8" text-anchor="middle" fill="#30383D" font-size="5.2" font-weight="900" font-family="Arial, sans-serif">INSERT</text>
+        <text x="21" y="50.1" text-anchor="middle" fill="#30383D" font-size="5.2" font-weight="900" font-family="Arial, sans-serif">COIN</text>
+        <rect x="19.2" y="57" width="3.6" height="16" rx="1.5" fill="#11171B"/>
+        <path d="M13.5 69.5h15l-1 8.5h-13z" fill="url(#coinCup)" stroke="#424B50" stroke-width="1"/>
+        <path d="M14 68.5h14v4.5H14z" fill="#E7E9E7" opacity=".72"/>
+      </svg>
+    </button>
   </div>
 
   <nav class="games" id="games"></nav>
+</div>
+
+<div class="support-ovl" id="supportOvl" hidden>
+  <section class="support-sheet" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <h2 id="supportTitle">후원하기.</h2>
+    <div class="support-actions">
+      <button class="support-choice" id="supportCancel" type="button">안 하기</button>
+      <a class="support-choice go" id="supportGo"
+         href="https://qr.kakaopay.com/Ej9SOogEu"
+         target="_blank" rel="noopener noreferrer">하기</a>
+    </div>
+  </section>
 </div>
 
 <div class="ovl" id="ovl">
@@ -440,6 +569,38 @@
    비워두면 지금처럼 그냥 상자로 남습니다.
    ───────────────────────────────────────────── */
 var HOME_URL = '';
+
+(function supportDialog(){
+  var trigger = document.getElementById('coinBtn');
+  var ovl = document.getElementById('supportOvl');
+  var cancel = document.getElementById('supportCancel');
+  var go = document.getElementById('supportGo');
+
+  function open(){
+    ovl.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+    cancel.focus();
+  }
+
+  function close(){
+    ovl.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', open);
+  cancel.addEventListener('click', close);
+  go.addEventListener('click', function(){
+    ovl.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+  });
+  ovl.addEventListener('click', function(e){
+    if (e.target === ovl) close();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !ovl.hidden) close();
+  });
+})();
 
 (function buildBrand(){
   if (!HOME_URL) return;
