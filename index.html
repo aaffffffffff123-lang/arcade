@@ -630,6 +630,14 @@ window.__arcadeSoundEnabled = true;
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+  room:
+    '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
+      '<rect x="3" y="1" width="34" height="28" rx="2" fill="#B7B2A8" stroke="#1B2430" stroke-width="1.6"/>' +
+      '<rect x="10" y="3" width="21" height="26" fill="#2C211E" stroke="#1B2430" stroke-width="1.4"/>' +
+      '<path d="M11.5 3.8l11.8 2.5v19.8l-11.8 2z" fill="#88786D" stroke="#1B2430" stroke-width="1.3" stroke-linejoin="round"/>' +
+      '<path d="M20.5 12.2v6.7" stroke="#1B2430" stroke-width="1.5" stroke-linecap="round"/>' +
+      '<path d="M24.2 7.4l5.2-2.2v21.7l-5.2-1.8z" fill="#4A302A" opacity=".72"/>' +
+    '</svg>',
     esteem:
     '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
       '<defs>' +
@@ -913,6 +921,7 @@ jockey:
 
 // 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
+  { name: '사유의 방',            url: 'https://aaffffffffff123-lang.github.io/room-of-thought/', chip: '#7A6558', icon: ICONS.room,     desc: '' },
     { name: 'ESTEEM LAB', url: 'https://aaffffffffff123-lang.github.io/self-esteem-meter/', chip: '#FF4A7D', icon: ICONS.esteem, desc: '' },
   { name: '삶의 의미', url: 'https://aaffffffffff123-lang.github.io/meaning-of-life/', chip: '#349DFF', icon: ICONS.meaning, desc: '' },
   { name: 'CRYING BOWL',          url: 'https://aaffffffffff123-lang.github.io/crying-bowl/',  chip: '#C9A15A', icon: ICONS.bowl,     desc: '' },
