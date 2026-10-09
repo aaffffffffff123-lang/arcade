@@ -630,6 +630,22 @@ window.__arcadeSoundEnabled = true;
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+  friendhazard:
+    '<svg class="ico" viewBox="0 0 64 64" aria-hidden="true">' +
+    '<circle cx="32" cy="34" r="27" fill="#ffdcc6" stroke="#1f1a24" stroke-width="3"/>' +
+    '<path d="M6 30C6 12 20 5 33 5s26 8 25 25c-6-9-16-12-27-12S12 21 6 30z" fill="#1c1519"/>' +
+    '<ellipse cx="22" cy="35" rx="7" ry="8.5" fill="#3a1f12"/>' +
+    '<ellipse cx="42" cy="35" rx="7" ry="8.5" fill="#3a1f12"/>' +
+    '<circle cx="19.5" cy="31.5" r="3" fill="#fff"/>' +
+    '<circle cx="39.5" cy="31.5" r="3" fill="#fff"/>' +
+    '<circle cx="24.5" cy="38.5" r="1.4" fill="#fff"/>' +
+    '<circle cx="44.5" cy="38.5" r="1.4" fill="#fff"/>' +
+    '<path d="M26 47q6 5 12 0" fill="none" stroke="#8c3a3a" stroke-width="2.6" stroke-linecap="round"/>' +
+    '<circle cx="13" cy="44" r="4" fill="#ff9db0" opacity=".7"/>' +
+    '<circle cx="51" cy="44" r="4" fill="#ff9db0" opacity=".7"/>' +
+    '<circle cx="47" cy="24" r="1.8" fill="#d3122c"/>' +
+    '<circle cx="51" cy="28" r="1.1" fill="#d3122c"/>' +
+    '</svg>',
   room:
     '<svg class="ico" viewBox="0 0 40 30" aria-hidden="true">' +
       '<rect x="3" y="1" width="34" height="28" rx="2" fill="#B7B2A8" stroke="#1B2430" stroke-width="1.6"/>' +
@@ -921,6 +937,7 @@ jockey:
 
 // 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
+  { name: '친구하자드',          url: 'https://aaffffffffff123-lang.github.io/friendhazard/', chip: '#D3122C', icon: ICONS.friendhazard, desc: '' },
   { name: '사유의 방',            url: 'https://aaffffffffff123-lang.github.io/room-of-thought/', chip: '#7A6558', icon: ICONS.room,     desc: '' },
     { name: 'ESTEEM LAB', url: 'https://aaffffffffff123-lang.github.io/self-esteem-meter/', chip: '#FF4A7D', icon: ICONS.esteem, desc: '' },
   { name: '삶의 의미', url: 'https://aaffffffffff123-lang.github.io/meaning-of-life/', chip: '#349DFF', icon: ICONS.meaning, desc: '' },
