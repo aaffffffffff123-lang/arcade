@@ -643,6 +643,8 @@ window.__arcadeSoundEnabled = true;
    name 을 비우면 빈 칸으로 남습니다.
    ───────────────────────────────────────────── */
 var ICONS = {
+  selfpity:
+    '<svg class="ico" aria-hidden="true" viewBox="0 0 64 64"> <rect width="64" height="64" rx="12" fill="#FFF1CE"/> <path d="M32 8L51 15V32C51 44 43 54 32 59C21 54 13 44 13 32V15Z" fill="#C85A4B" stroke="#292220" stroke-width="3.5" stroke-linejoin="round"/> <g transform="rotate(42 32 32)" stroke="#292220" stroke-width="2.8" stroke-linejoin="round"> <path d="M32 2L38 11L36 38H28L26 11Z" fill="#E3ECF0"/> <rect x="21" y="36.5" width="22" height="6" rx="2" fill="#D79A32"/> <rect x="29" y="41" width="6" height="14" rx="2" fill="#6E4335"/> <circle cx="32" cy="58" r="4" fill="#D79A32"/> </g> </svg>',
   spider:
     '<svg class="ico" viewBox="0 0 64 64" aria-hidden="true">' +
       '<g fill="none" stroke="#141416" stroke-width="3.5" stroke-linecap="butt" stroke-linejoin="miter">' +
@@ -960,6 +962,7 @@ jockey:
 
 // 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
+  { name: '자기연민 디펜스',      url: 'https://aaffffffffff123-lang.github.io/self-pity-defense/', chip: '#C85A4B', icon: ICONS.selfpity, desc: '' },
   { name: '거미살이',             url: 'https://aaffffffffff123-lang.github.io/spider/',        chip: '#FFD21A', icon: ICONS.spider,   desc: '' },
   { name: '친구하자드',          url: 'https://aaffffffffff123-lang.github.io/friendhazard/', chip: '#D3122C', icon: ICONS.friendhazard, desc: '' },
   { name: '사유의 방',            url: 'https://aaffffffffff123-lang.github.io/room-of-thought/', chip: '#7A6558', icon: ICONS.room,     desc: '' },
