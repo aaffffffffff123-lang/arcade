@@ -329,7 +329,7 @@ function buildBoot(){
  const g=new THREE.Group(),black=mat(0x202a25,.45,.08),leather=mat(0x4e5746,.49,.12),rubber=mat(0x1c2521,.78),edge=mat(0x8b895f,.65),laces=mat(0xc0b88c,.9);
  const shape=new THREE.Shape();shape.moveTo(-.12,-.28);shape.lineTo(-.16,.15);shape.quadraticCurveTo(-.185,.37,0,.4);shape.quadraticCurveTo(.185,.37,.16,.15);shape.lineTo(.12,-.28);shape.quadraticCurveTo(0,-.33,-.12,-.28);
  const sole=new THREE.Mesh(new THREE.ExtrudeGeometry(shape,{depth:.065,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.012,bevelThickness:.009,curveSegments:10}),rubber);
- sole.rotation.x=-Math.PI/2;sole.position.y=.035;sole.castShadow=true;g.add(sole);
+ sole.rotation.x=-Math.PI/2;sole.position.y=.014;sole.castShadow=true;g.add(sole);
  sphere(1,leather,0,.18,-.02,g,.166,.15,.34);
  sphere(1,black,0,.17,-.22,g,.167,.12,.17);
  const ankle=new THREE.Mesh(new THREE.CylinderGeometry(.11,.135,.34,16),leather);ankle.position.set(0,.34,.19);ankle.castShadow=true;g.add(ankle);
@@ -582,9 +582,9 @@ function pose(dt){
  let left=worldPoint(-.25,0,-.18-.36*press),right=worldPoint(.23,0,-.24),angle=0;
  if(actionTarget&&activeTool==='boot'&&p!=='idle'){
   if(p==='lift'){const u=smooth(t/.19);right.lerp(actionTarget,u*.9);right.y=.04+Math.sin(u*Math.PI*.5)*.65;angle=-.35*u}
-  if(p==='fall'){right.copy(actionTarget);right.y=.03+(1-smooth(t/.14))*.65;angle=-.35*(1-smooth(t/.14))}
-  if(p==='press'){right.copy(actionTarget);right.y=.025;angle=Math.sin(time*26)*press*.018;left.y=Math.max(0,press-.12)*.18;left.x+=Math.cos(player.yaw)*.025*press}
-  if(p==='peel'){const u=clamp(t/.64,0,1);right=actionTarget.clone().lerp(right,smooth(u));right.y=.025+Math.sin(u*Math.PI)*.72;angle=-Math.sin(u*Math.PI)*.9}
+  if(p==='fall'){right.copy(actionTarget);right.y=.005+(1-smooth(t/.14))*.65;angle=-.35*(1-smooth(t/.14))}
+  if(p==='press'){right.copy(actionTarget);right.y=.005;angle=Math.sin(time*26)*press*.018;left.y=Math.max(0,press-.12)*.18;left.x+=Math.cos(player.yaw)*.025*press}
+  if(p==='peel'){const u=clamp(t/.64,0,1);right=actionTarget.clone().lerp(right,smooth(u));right.y=.005+Math.sin(u*Math.PI)*.72;angle=-Math.sin(u*Math.PI)*.9}
  }
  bootL.position.copy(left);bootR.position.copy(right);bootL.rotation.set(press*.12,player.yaw,press*.1);bootR.rotation.set(angle,player.yaw,press*.03);
  for(let i=0;i<2;i++){
@@ -594,7 +594,7 @@ function pose(dt){
   between(legs[i].a,ankle,knee);between(legs[i].b,knee,hip);
  }
  bootShadow.visible=activeTool==='boot'&&p!=='idle';
- if(actionTarget){bootShadow.position.set(actionTarget.x,.012,actionTarget.z);bootShadow.material.opacity=clamp(1-right.y,.12,.9);bootShadow.rotation.z=-player.yaw}
+ if(actionTarget){bootShadow.position.set(actionTarget.x,.004,actionTarget.z);bootShadow.material.opacity=clamp(1-right.y,.12,.9);bootShadow.rotation.z=-player.yaw}
  shovel.visible=activeTool==='shovel';vacuum.visible=activeTool==='vacuum'||activeTool==='tanker';
  if(shovel.visible){
   let q=worldPoint(.45,.6,-.7),tilt=-.45;
