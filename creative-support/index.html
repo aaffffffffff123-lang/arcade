@@ -579,11 +579,11 @@ function updateTethers(){
 }
 function pose(dt){
  const p=stomp.phase,t=stomp.t,press=p==='press'?stomp.pressure:0;
- let left=worldPoint(-.23,0,-.18),right=worldPoint(.23,0,-.24),angle=0;
+ let left=worldPoint(-.25,0,-.18-.36*press),right=worldPoint(.23,0,-.24),angle=0;
  if(actionTarget&&activeTool==='boot'&&p!=='idle'){
   if(p==='lift'){const u=smooth(t/.19);right.lerp(actionTarget,u*.9);right.y=.04+Math.sin(u*Math.PI*.5)*.65;angle=-.35*u}
   if(p==='fall'){right.copy(actionTarget);right.y=.03+(1-smooth(t/.14))*.65;angle=-.35*(1-smooth(t/.14))}
-  if(p==='press'){right.copy(actionTarget);right.y=.025;angle=Math.sin(time*26)*press*.018;left.y=Math.max(0,press-.12)*.18;left.z+=.05*press}
+  if(p==='press'){right.copy(actionTarget);right.y=.025;angle=Math.sin(time*26)*press*.018;left.y=Math.max(0,press-.12)*.18;left.x+=Math.cos(player.yaw)*.025*press}
   if(p==='peel'){const u=clamp(t/.64,0,1);right=actionTarget.clone().lerp(right,smooth(u));right.y=.025+Math.sin(u*Math.PI)*.72;angle=-Math.sin(u*Math.PI)*.9}
  }
  bootL.position.copy(left);bootR.position.copy(right);bootL.rotation.set(press*.12,player.yaw,press*.1);bootR.rotation.set(angle,player.yaw,press*.03);
@@ -617,7 +617,7 @@ function pose(dt){
  const leanGoal=activeTool==='boot'&&p==='press'?press:0;lean=mix(lean,leanGoal,Math.min(1,dt*12));
  const bob=approach||keys.KeyW||keys.KeyS||keys.KeyA||keys.KeyD?Math.sin(steps*9)*.025:Math.sin(time*1.7)*.006;
  camera.position.set(player.x+Math.cos(player.yaw)*lean*.055,1.78-lean*.12+bob,player.z-Math.sin(player.yaw)*lean*.055);
- camera.rotation.set((started?player.pitch:-.28)+Math.sin(time*80)*shake*.004,player.yaw,lean*-.018+Math.cos(time*63)*shake*.003,'YXZ');
+ camera.rotation.set((started?player.pitch-lean*.12:-.28)+Math.sin(time*80)*shake*.004,player.yaw,lean*-.018+Math.cos(time*63)*shake*.003,'YXZ');
  shake=Math.max(0,shake-dt*7);
 }
 function updateHUD(){
