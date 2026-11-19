@@ -345,6 +345,7 @@
     height:9px;
     background:var(--chip);
   }
+  .game > span{overflow-wrap:anywhere;}
   .game .ico{width:40px;height:30px;display:block;flex:none;}
   .game small{
     display:block;
@@ -950,6 +951,12 @@ jockey:
       '</g>' +
     '</svg>',
 
+  kcwf:
+    '<svg class="ico" aria-hidden="true" viewBox="0 0 96 64">' +
+    '<rect width="96" height="64" rx="10" fill="#f3f5fa"/>' +
+    '<path d="M8 24H35M21.5 24V50M43 24H70M49.5 24V50M63.5 24V50M79 17 89 50" fill="none" stroke="#1f4fd8" stroke-width="9" stroke-linejoin="miter"/>' +
+    '</svg>',
+
   deepdown:
     '<img class="ico" src="https://aaffffffffff123-lang.github.io/deep-down/favicon.svg" width="40" height="30" style="object-fit:contain;object-position:left center" alt="" aria-hidden="true">',
 
@@ -991,6 +998,7 @@ jockey:
 
 // 여기 적힌 순서가 곧 화면에 나오는 순서입니다. 카드를 더하려면 이 목록에 한 줄만 쓰면 됩니다.
 var GAMES = [
+  { name: '한국창작인복지재단',     url: 'https://aaffffffffff123-lang.github.io/kcwf/',          chip: '#1F4FD8', icon: ICONS.kcwf,     desc: '' },
   { name: '침잠하기',               url: 'https://aaffffffffff123-lang.github.io/deep-down/',      chip: '#A67C52', icon: ICONS.deepdown, desc: '' },
   { name: '鉄拳',                 url: 'https://aaffffffffff123-lang.github.io/ironfist/',       chip: '#788590', icon: ICONS.ironfist, desc: '' },
   { name: '인정욕구 채우기',              url: 'https://aaffffffffff123-lang.github.io/egotrip/',        chip: '#E6B74E', icon: ICONS.egotrip,   desc: '' },
